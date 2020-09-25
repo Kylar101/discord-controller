@@ -1,15 +1,6 @@
-import Discord from 'discord.js';
 import { prefix, token } from './config.json';
-const client = new Discord.Client();
+import { DiscordBot } from './package/bot';
 
-client.once('ready', () => {
-	console.log('Ready!');
-});
+const bot = new DiscordBot({ prefix, token});
 
-client.on('message', (message: Discord.Message) => {
-  if (message.content.startsWith(`${prefix}respond`)) {
-    message.channel.send('response');
-  }
-});
-
-client.login(token);
+bot.start();

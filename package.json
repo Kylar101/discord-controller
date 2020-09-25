@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "nodemon --exec ts-node src/index.ts",
+    "bootstrap": "nodemon --exec ts-node src/bootstrap.ts",
     "build": "tsc",
     "test": "echo 'No tests created'",
     "lint": "eslint src/**/*.ts",
@@ -13,6 +14,10 @@
   "keywords": [
     "bot"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kylar101/discord-bot.git"
+  },
   "author": "Kylar101",
   "license": "ISC",
   "dependencies": {
@@ -22,6 +27,7 @@
     "@types/node": "^14.0.14",
     "@typescript-eslint/eslint-plugin": "^3.5.0",
     "@typescript-eslint/parser": "^3.5.0",
+    "reflect-metadata": "^0.1.13",
     "eslint": "^7.4.0",
     "nodemon": "^2.0.4",
     "ts-node": "^8.10.2",
