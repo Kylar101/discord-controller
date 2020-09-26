@@ -10,6 +10,21 @@ export class Injector {
     return new target(...injections);
   }
 
+  command(target: any) {
+    if (this.depInstances && this.depInstances.has(target.name)) {
+      console.log(target.name, 'instance exists');
+      return this.depInstances.get(target.name);
+    }
+
+    const tokens = Reflect.getMetadata('design:paramtypes', target) || [];
+    const injections = tokens.map((token: any) => Resolver.resolve<any>(token));
+    this.depInstances.set(target.name, target);
+
+    console.log(this.depInstances);
+
+    return new target(...injections);
+  }
+
   resolve<T>(target: Ctr<any>): any {
     if (this.depInstances && this.depInstances.has(target.name)) {
       console.log(target.name, 'instance exists');
