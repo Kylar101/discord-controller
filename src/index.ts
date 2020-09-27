@@ -1,9 +1,12 @@
-import { prefix, token } from './config.json';
-import { DiscordBot } from './package/bot';
-import { RespondCommand } from './commands/RespondCommand';
+import { MetadataStorage } from './metadata/MetadataStorage';
 
-const bot = new DiscordBot({ prefix, token}, [
-  RespondCommand
-]);
+export function getMetadataStorage(): MetadataStorage {
+  if (!(global as any).metaDataStorage)
+      (global as any).metaDataStorage = new MetadataStorage();
 
-bot.start();
+  return (global as any).metaDataStorage;
+}
+
+export function createServer(options: any): any {
+  return options;
+}

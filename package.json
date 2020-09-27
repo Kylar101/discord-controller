@@ -5,7 +5,6 @@
   "main": "src/index.js",
   "scripts": {
     "start": "nodemon --exec ts-node src/index.ts",
-    "bootstrap": "nodemon --exec ts-node src/bootstrap.ts",
     "build": "tsc",
     "test": "echo 'No tests created'",
     "lint": "eslint src/**/*.ts",
