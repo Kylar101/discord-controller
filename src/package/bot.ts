@@ -1,7 +1,7 @@
 import { BotOptions } from './types';
-import { Client, Message } from 'discord.js';
+import { Client } from 'discord.js';
 import { Command } from './command';
-import { Resolver } from './injector';
+// import { Resolver } from './injector';
 
 export class DiscordBot {
 
@@ -23,17 +23,15 @@ export class DiscordBot {
     });
 
     this._client.on('message', this.handleCommands);
-    console.log(this._commands);
 
     this._client.login(this._token);
   }
 
-  private handleCommands(message: Message) {
+  private handleCommands() {
+    console.log('command count', this._commands)
     this._commands.forEach(command => {
       console.log(command);
-      const builtCommand = Resolver.command(command);
-
-      builtCommand.run(message);
+      // const builtCommand = Resolver.command(command);
     });
 
   }
