@@ -1,3 +1,4 @@
+import { Client } from './client/client';
 import { MetadataStorage } from './metadata/MetadataStorage';
 
 export function getMetadataStorage(): MetadataStorage {
@@ -9,4 +10,8 @@ export function getMetadataStorage(): MetadataStorage {
 
 export function createServer(options: any): any {
   return options;
+}
+
+export function createExecutor(client: Client, options: any) {
+
 }
