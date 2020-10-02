@@ -4,7 +4,7 @@
   "description": "A discord bot",
   "main": "src/index.js",
   "scripts": {
-    "start": "nodemon --exec ts-node src/index.ts",
+    "start": "nodemon --exec ts-node ./src/examples/bot.ts",
     "build": "tsc",
     "test": "echo 'No tests created'",
     "lint": "eslint src/**/*.ts",

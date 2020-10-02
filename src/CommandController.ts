@@ -1,11 +1,19 @@
 import { Client } from './client/client';
-import { CommandOptions } from './commandOptions';
+// import { CommandOptions } from './commandOptions';
 import { MetadataBuilder } from './metadata/MetadataBuilder';
 
 export class CommandController {
   private metadataBuilder: MetadataBuilder;
 
-  constructor(private client: Client, private options: CommandOptions) {
-    this.metadataBuilder = new MetadataBuilder(options);
+  constructor(private client: Client) {
+    this.metadataBuilder = new MetadataBuilder();
+  }
+
+  registerCommands(classes?: Function[]): this {
+    const commands = this.metadataBuilder.buildCommandMetadata(classes);
+    commands.map(command => {
+      this.client.registerActionCommand(command);
+    });
+    return this;
   }
 }
