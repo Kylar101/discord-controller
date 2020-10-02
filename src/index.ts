@@ -4,6 +4,12 @@ import { CommandOptions } from './commandOptions';
 import { MetadataStorage } from './metadata/MetadataStorage';
 import { importClassesFromDirectories } from './utils/importClassesFromDirectories';
 
+export * from './commandOptions';
+export * from './CommandController';
+export * from './metadata';
+export * from './decorator';
+export * from './client';
+
 export function getMetadataStorage(): MetadataStorage {
   if (!(global as any).metaDataStorage)
       (global as any).metaDataStorage = new MetadataStorage();
