@@ -10,13 +10,13 @@ export class Client {
   constructor(config: CommandOptions) {
     this.config = config;
     this.client = new DiscordClient();
-    this.client.once('ready', () => {
+    this.client.once('ready', (): void => {
       console.log('ready');
     });
   }
 
-  registerActionCommand(command: CommandMetadata) {
-    this.client.on('message', (message: Message) => {
+  registerActionCommand(command: CommandMetadata): void {
+    this.client.on('message', (message: Message): void => {
       console.log('message', message.content, command.target.name);
       if(message.content.startsWith(this.getCommandTrigger(command))) {
         console.log(command.target.name);
@@ -24,11 +24,11 @@ export class Client {
     });
   }
 
-  start() {
+  start(): Promise<string> {
     return this.client.login(this.config.token);
   }
 
-  private getCommandTrigger(command: CommandMetadata) {
+  private getCommandTrigger(command: CommandMetadata): string {
     return `${command.prefix}${command.target.name.toLowerCase()}`;
   }
 }

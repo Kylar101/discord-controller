@@ -9,6 +9,6 @@ export class CommandMetadata {
   constructor(args: CommandMetaDataArgs) {
     this.target = args.target;
     this.prefix = args.prefix || '!'; //TODO create global constants
-    this.options = args.options
+    this.options = args.options;
   }
 }

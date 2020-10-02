@@ -20,6 +20,7 @@
   "author": "Kylar101",
   "license": "ISC",
   "dependencies": {
+    "@types/ws": "^7.2.7",
     "discord.js": "^12.2.0"
   },
   "publishConfig": {
@@ -29,9 +30,9 @@
     "@types/node": "^14.0.14",
     "@typescript-eslint/eslint-plugin": "^3.5.0",
     "@typescript-eslint/parser": "^3.5.0",
-    "reflect-metadata": "^0.1.13",
     "eslint": "^7.4.0",
     "nodemon": "^2.0.4",
+    "reflect-metadata": "^0.1.13",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.6"
   }

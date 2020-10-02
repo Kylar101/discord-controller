@@ -10,11 +10,11 @@ export class MetadataBuilder {
     this.metadataStorage = getMetadataStorage();
   }
 
-  buildCommandMetadata(classes?: Function[]) {
+  buildCommandMetadata(classes?: Function[]): CommandMetadata[] {
     return this.createCommands(classes);
   }
 
-  private createCommands(classes?: Function[]) {
+  private createCommands(classes?: Function[]): CommandMetadata[] {
     const commands = classes ? this.metadataStorage.filterMetadataForCommands(classes) : this.metadataStorage.commands;
     return commands.map(args => new CommandMetadata(args));
   }
