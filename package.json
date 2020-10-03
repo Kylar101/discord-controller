@@ -4,7 +4,7 @@
   "description": "A wrapper around discord.js for easily creating discord bots with dependency injection",
   "main": "dist/index.js",
   "scripts": {
-    "start": "nodemon --exec ts-node ./src/examples/bot.ts",
+    "start": "nodemon --exec ts-node ./src/example/bot.ts",
     "build": "tsc",
     "test": "echo 'No tests created'",
     "lint": "eslint src/**/*.ts",

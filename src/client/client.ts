@@ -17,7 +17,6 @@ export class Client {
 
   registerActionCommand(command: CommandMetadata): void {
     this.client.on('message', (message: Message): void => {
-      console.log('message', message.content, command.target.name);
       if(message.content.startsWith(this.getCommandTrigger(command))) {
         console.log(command.target.name);
       }

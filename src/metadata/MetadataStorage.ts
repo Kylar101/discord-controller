@@ -1,7 +1,9 @@
 import { CommandMetaDataArgs } from './args/CommandMetadataArgs';
+import { ServiceMetadataArgs } from './args/ServiceMetadataArgs';
 
 export class MetadataStorage {
   commands: CommandMetaDataArgs[];
+  services: ServiceMetadataArgs[];
 
   constructor() {
     this.commands = [];
