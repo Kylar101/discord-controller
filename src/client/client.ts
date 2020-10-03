@@ -2,6 +2,7 @@
 import { Client as DiscordClient, Message } from 'discord.js';
 import { CommandMetadata } from '../metadata/CommandMetadata';
 import { CommandOptions } from '../commandOptions';
+import { Resolver } from '../injector';
 
 export class Client {
   private readonly config: CommandOptions;
@@ -18,7 +19,8 @@ export class Client {
   registerActionCommand(command: CommandMetadata): void {
     this.client.on('message', (message: Message): void => {
       if(message.content.startsWith(this.getCommandTrigger(command))) {
-        console.log(command.target.name);
+        const compiled = Resolver.resolve(command.target);
+        compiled.run(message);
       }
     });
   }
