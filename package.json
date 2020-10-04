@@ -1,6 +1,6 @@
 {
   "name": "@kylar101/discord-client",
-  "version": "0.0.1-preview.0",
+  "version": "0.0.1-preview.1",
   "description": "A wrapper around discord.js for easily creating discord bots with dependency injection",
   "main": "dist/index.js",
   "scripts": {
@@ -22,9 +22,6 @@
   "dependencies": {
     "discord.js": "^12.2.0",
     "reflect-metadata": "^0.1.13"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
   },
   "devDependencies": {
     "@types/node": "^14.0.14",

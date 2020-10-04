@@ -1,0 +1,29 @@
+name: Lint and Test
+
+on:
+  push:
+    branches:
+      - feature/*
+      - develop
+  pull_request:
+    branches:
+      - feature/*
+      - develop
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run Unit tests
+      run: |
+        npm i
+        npm run test
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run Linting
+        run: |
+          npm i
+          npm run lint

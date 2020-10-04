@@ -15,7 +15,7 @@ export function importClassesFromDirectories(directories: string[], formats = ['
   };
 
   const allFiles = directories.reduce((allDirs, dir) => {
-    return allDirs.concat(require('glob').sync(path.normalize(dir)));
+    return allDirs.concat(require('glob').sync(path.normalize(dir))); // eslint-disable-line
   }, [] as string[]);
 
   const dirs = allFiles
@@ -24,7 +24,7 @@ export function importClassesFromDirectories(directories: string[], formats = ['
       return formats.indexOf(path.extname(file)) !== -1 && dtsExtension !== '.d.ts';
     })
     .map(file => {
-      return require(file);
+      return require(file); // eslint-disable-line
     });
 
   return loadFileClasses(dirs, []);
