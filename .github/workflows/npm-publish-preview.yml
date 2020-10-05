@@ -12,8 +12,8 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-      - run: yarn
-      - run: yarn build
+      - run: npm ci
+      - run: npm run build
 
   publish-npm:
     needs: build
@@ -24,9 +24,9 @@ jobs:
         with:
           node-version: '12.x'
           registry-url: https://registry.npmjs.org/
-      - run: yarn
-      - run: yarn build
-      - run: yarn publish --tag preview
+      - run: npm i
+      - run: npm run build
+      - run: npm publish --tag preview
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
@@ -40,8 +40,8 @@ jobs:
           node-version: '12.x'
           registry-url: https://npm.pkg.github.com/
           scope: '@kylar'
-      - run: yarn
-      - run: yarn build
-      - run: yarn publish --tag preview
+      - run: npm i
+      - run: npm run build
+      - run: npm publish --tag preview
         env:
           NODE_AUTH_TOKEN: ${{secrets.GHP_TOKEN}}
