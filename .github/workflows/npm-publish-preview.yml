@@ -25,6 +25,7 @@ jobs:
           node-version: '12.x'
           registry-url: https://registry.npmjs.org/
       - run: npm i
+      - run: cat .npmrc
       - run: npm run build
       - run: npm publish --tag preview --access public
         env:
