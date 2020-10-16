@@ -1,6 +1,6 @@
 {
   "name": "discord-controller",
-  "version": "0.0.1-preview.1",
+  "version": "0.0.1-preview.2",
   "description": "A wrapper around discord.js for easily creating discord bots with dependency injection",
   "main": "dist/index.js",
   "scripts": {
@@ -15,7 +15,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Kylar101/discord-client.git"
+    "url": "https://github.com/Kylar101/discord-controller.git"
   },
   "author": "Kylar101",
   "license": "ISC",
