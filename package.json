@@ -1,5 +1,5 @@
 {
-  "name": "discord-client",
+  "name": "discord-controller",
   "version": "0.0.1-preview.1",
   "description": "A wrapper around discord.js for easily creating discord bots with dependency injection",
   "main": "dist/index.js",
