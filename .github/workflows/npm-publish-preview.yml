@@ -25,6 +25,7 @@ jobs:
           node-version: "12.x"
           registry-url: "https://registry.npmjs.org"
       - run: npm install
+      - run: npm whoami
       - run: npm run build
       - run: npm publish --tag preview
         env:
@@ -41,6 +42,7 @@ jobs:
           registry-url: "https://npm.pkg.github.com/"
           scope: "@kylar"
       - run: npm i
+      - run: npm whoami
       - run: npm run build
       - run: npm publish --tag preview
         env:
