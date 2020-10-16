@@ -27,7 +27,7 @@ jobs:
           registry-url: "https://registry.npmjs.org"
       - run: npm install
       - run: npm run build
-      - run: npm config set registry http://registry.npmjs.org
+      - run: cd ~ && ls -lsa
       - run: npm publish --tag preview
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}}
