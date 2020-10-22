@@ -1,12 +1,16 @@
 import { CommandMetaDataArgs } from './args/CommandMetadataArgs';
+import { FlagMetadataArgs } from './args/FlagMetadataArgs';
 import { ServiceMetadataArgs } from './args/ServiceMetadataArgs';
 
 export class MetadataStorage {
   commands: CommandMetaDataArgs[];
   services: ServiceMetadataArgs[];
+  flags: FlagMetadataArgs[];
 
   constructor() {
     this.commands = [];
+    this.services = [];
+    this.flags = [];
   }
 
   filterMetadataForCommands(classes: Function[]): CommandMetaDataArgs[] {
