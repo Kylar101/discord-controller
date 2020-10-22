@@ -16,6 +16,9 @@ export class MetadataBuilder {
 
   private createCommands(classes?: Function[]): CommandMetadata[] {
     const commands = classes ? this.metadataStorage.filterMetadataForCommands(classes) : this.metadataStorage.commands;
-    return commands.map(args => new CommandMetadata(args));
+    return commands.map(args => {
+      const command = new CommandMetadata(args);
+      return command;
+    });
   }
 }

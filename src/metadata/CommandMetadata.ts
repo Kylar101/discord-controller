@@ -5,6 +5,7 @@ export class CommandMetadata {
   target: Function;
   prefix: string;
   options: any
+  flags: any[];
 
   constructor(args: CommandMetaDataArgs) {
     this.target = args.target;

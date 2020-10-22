@@ -1,4 +1,4 @@
-import { getMetadataStorage } from '../'
+import { getMetadataStorage } from '../';
 import { FlagMetadataArgs } from '../metadata';
 
 export function Flag(name?: string, options?: FlagMetadataArgs): Function {
@@ -8,5 +8,5 @@ export function Flag(name?: string, options?: FlagMetadataArgs): Function {
       method: name || methodName,
       options
     });
-  }
+  };
 }
