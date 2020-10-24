@@ -16,4 +16,8 @@ export class MetadataStorage {
   filterMetadataForCommands(classes: Function[]): CommandMetaDataArgs[] {
     return this.commands.filter(command => classes.filter(cls => command.target === cls).length > 0);
   }
+
+  filterFlagsForTarget(target: Function): FlagMetadataArgs[] {
+    return this.flags.filter(flag => flag.target === target);
+  }
 }
