@@ -18,15 +18,14 @@ export class Client {
   }
 
   registerActionCommand(command: CommandMetadata): void {
+    const compiled = Resolver.resolve(command.target);
     this.client.on('message', (message: Message): void => {
       const trigger = this.getCommandTrigger(command);
       if (message.content.startsWith(trigger) && !this.checkForFlag(command.flags, trigger, message)) {
-        const compiled = Resolver.resolve(command.target);
-        console.log('main class', compiled);
         compiled.run(message);
       }
       if (command.flags.length > 0) {
-        this.registerCommandFlags(command.flags, message, trigger);
+        this.registerCommandFlags(command.flags, message, trigger, compiled);
       }
     });
   }
@@ -39,11 +38,9 @@ export class Client {
     return `${command.prefix}${command.target.name.toLowerCase()}`;
   }
 
-  private registerCommandFlags(flags: FlagMetadata[], message: Message, trigger: string): void {
+  private registerCommandFlags(flags: FlagMetadata[], message: Message, trigger: string, compiled: any): void {
     flags.forEach(flag => {
       if (message.content.startsWith(this.getFlagTrigger(trigger, flag))) {
-        const compiled = Resolver.resolve(flag.target);
-        console.log('class', compiled);
         compiled[flag.name](message);
       }
     });
