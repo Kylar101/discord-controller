@@ -9,6 +9,7 @@ export * from './CommandController';
 export * from './metadata';
 export * from './decorator';
 export * from './client';
+export * from './commands';
 
 export function getMetadataStorage(): MetadataStorage {
   if (!(global as any).metaDataStorage)
