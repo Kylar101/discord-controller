@@ -1,8 +1,8 @@
-import { Message } from 'discord.js';
+import { GuildMember, Message, Role } from 'discord.js';
 import { MemberNotFound } from '../errors/MembersNotFound';
 import { RoleNotFound } from '../errors/RoleNotFound';
 
-export async function getRoleByName(message: Message, name: string) {
+export async function getRoleByName(message: Message, name: string): Promise<Role> {
   const manager = await getRoleManager(message);
   const role = manager?.cache.find(role => role.name == name);
   if (role) {
@@ -11,7 +11,7 @@ export async function getRoleByName(message: Message, name: string) {
   throw new RoleNotFound(`Role with name: ${name} not found`);
 }
 
-export async function getRoleById(message: Message, id: string) {
+export async function getRoleById(message: Message, id: string): Promise<Role> {
   const manager = await getRoleManager(message);
   const role = manager?.cache.get(id);
   if (role) {
@@ -20,7 +20,7 @@ export async function getRoleById(message: Message, id: string) {
   throw new RoleNotFound(`Role with ID: ${id} not found`);
 }
 
-export function getMembers(message: Message) {
+export function getMentionedMembers(message: Message): GuildMember[] {
   const members = message.mentions.members?.map(x => x);
   if (members) {
     return members;

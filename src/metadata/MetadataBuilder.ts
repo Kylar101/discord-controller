@@ -27,7 +27,7 @@ export class MetadataBuilder {
 
   private createFlags(command: CommandMetadata): FlagMetadata[] {
     let target = command.target;
-    let flagsWithTarget: FlagMetadataArgs[] = [];
+    const flagsWithTarget: FlagMetadataArgs[] = [];
     while (target) {
       flagsWithTarget.push(
         ...getMetadataStorage()
