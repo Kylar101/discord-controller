@@ -10,6 +10,7 @@ export * from './metadata';
 export * from './decorator';
 export * from './client';
 export * from './commands';
+export * from './utils';
 
 export function getMetadataStorage(): MetadataStorage {
   if (!(global as any).metaDataStorage)
@@ -23,12 +24,12 @@ export function createServer(options: CommandOptions): Client {
   return managerServer(client, options);
 }
 
-export function managerServer(client: Client, options: CommandOptions): Client {
+function managerServer(client: Client, options: CommandOptions): Client {
   createExecutor(client, options);
   return client;
 }
 
-export function createExecutor(client: Client, options: CommandOptions) {
+function createExecutor(client: Client, options: CommandOptions) {
   let commandClasses: Function[] = [];
   if (options && options.commands && options.commands.length) {
     commandClasses = (options.commands as any[]).filter(command => command instanceof Function);
