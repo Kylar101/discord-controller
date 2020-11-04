@@ -1,4 +1,4 @@
-# Discord Client
+# Discord Controller
 > A discord bot framework with inbuilt dependency injection
 
 ## Installation
@@ -33,6 +33,10 @@
 
     @Command()
     export class MyCommand extends Action {
+        constructor() {
+            super();
+        }
+
         run(message: Message) {
             message.channel.send('This command will reply to the user');
         }
@@ -57,4 +61,79 @@
     bot.start();
     ```
 
-4. Run `node bot.ts` and type `!mycommand` in your discord server. The bot will respond with `"This command will reply to the user"`
+4. Run your bot and type `!mycommand` in your discord server. The bot will respond with `"This command will reply to the user"`
+
+## More Examples
+
+### Custom Command Prefixes
+
+You can change the command prefix from the default `!` by passing it into the command decorator
+
+    ```ts
+    import { Command, Action, Message } from 'discord-controller';
+
+    @Command('&')
+    export class MyCommand extends Action {
+        constructor() {
+            super();
+        }
+
+        run(message: Message) {
+            message.channel.send('This command will reply to the user');
+        }
+    }
+    ```
+
+This will make the command respond to `&mycommand`
+
+### Command Flags
+
+If you are designing a command that has options, you can use `@Flag` in addition to `@Command` to add flags to your command.
+
+    ```ts
+    import { Command, Flag, Action, Message } from 'discord-controller';
+
+    @Command()
+    export class MyCommand extends Action {
+        constructor() {
+            super();
+        }
+
+        run(message: Message) {
+            message.channel.send('This will be sent from the base command');
+        }
+
+        @Flag()
+        myFlag(message: Message) {
+            message.channel.send('This will be sent from the flag');
+        }
+    }
+    ```
+
+`!mycommand` will respond with `"This will be sent from the base command"` and `!mycommand myflag` will respond with `"This will be sent from the flag"`
+
+### Dependency Injection
+
+`discord-controller` has inbuilt dependency injection that will work automatically when using the `@Service` decorator
+
+    ```ts
+    import { Command, Service, Action, Message } from 'discord-controller';
+
+    @Service()
+    export class MyService {
+        myFunction() {
+            return 'this is from a service';
+        }
+    }
+
+    @Command()
+    export class MyCommand extends Action {
+        constructor(private service: MyService) {
+            super();
+        }
+
+        run(message: Message) {
+            message.channel.send(this.service.myFunction());
+        }
+    }
+    ```
