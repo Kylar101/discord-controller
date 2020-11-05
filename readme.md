@@ -28,7 +28,7 @@
 
 2. Create a file `MyCommand.ts`
 
-    ```ts
+    ```typescript
     import { Command, Action, Message } from 'discord-controller';
 
     @Command()
@@ -46,7 +46,7 @@
     this class will register a command with the bot
 
 3. Create a file `bot.ts`
-    ```ts
+    ```typescript
     import 'reflect-metadata';
     import { createServer } from 'discord-controller';
     import { MyCommand } from './MyCommand';
@@ -69,7 +69,7 @@
 
 You can change the command prefix from the default `!` by passing it into the command decorator
 
-    ```ts
+    ```typescript
     import { Command, Action, Message } from 'discord-controller';
 
     @Command('&')
@@ -90,7 +90,7 @@ This will make the command respond to `&mycommand`
 
 If you are designing a command that has options, you can use `@Flag` in addition to `@Command` to add flags to your command.
 
-    ```ts
+    ```typescript
     import { Command, Flag, Action, Message } from 'discord-controller';
 
     @Command()
@@ -116,7 +116,7 @@ If you are designing a command that has options, you can use `@Flag` in addition
 
 `discord-controller` has inbuilt dependency injection that will work automatically when using the `@Service` decorator
 
-    ```ts
+    ```typescript
     import { Command, Service, Action, Message } from 'discord-controller';
 
     @Service()
