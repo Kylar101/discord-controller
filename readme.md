@@ -24,7 +24,7 @@
 
 ## Example of useage
 
-1. Register a new bot with [discord](https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot), it to your server and copy your auth token
+1. Register a new bot with [discord](https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot), add it to your server and copy your auth token
 
 2. Create a file `MyCommand.ts`
 
