@@ -3,9 +3,9 @@
 
 ## Installation
 
-1. Install module
+1. Install module and the discord sdk
 
-    `npm install discord-controller`
+    `npm install discord-controller discord.js`
 
 2. `reflect-metadata` shim is required
 
@@ -29,7 +29,8 @@
 2. Create a file `MyCommand.ts`
 
     ```typescript
-    import { Command, Action, Message } from 'discord-controller';
+    import { Command, Action } from 'discord-controller';
+    import { Message } from 'discord.js';
 
     @Command()
     export class MyCommand extends Action {
@@ -70,7 +71,8 @@
 You can change the command prefix from the default `!` by passing it into the command decorator
 
 ```typescript
-import { Command, Action, Message } from 'discord-controller';
+import { Command, Action } from 'discord-controller';
+import { Message } from 'discord.js';
 
 @Command('&')
 export class MyCommand extends Action {
@@ -91,7 +93,8 @@ This will make the command respond to `&mycommand`
 If you are designing a command that has options, you can use `@Flag` in addition to `@Command` to add flags to your command.
 
 ```typescript
-import { Command, Flag, Action, Message } from 'discord-controller';
+import { Command, Flag, Action } from 'discord-controller';
+import { Message } from 'discord.js';
 
 @Command()
 export class MyCommand extends Action {
@@ -117,7 +120,8 @@ export class MyCommand extends Action {
 `discord-controller` has inbuilt dependency injection that will work automatically when using the `@Service` decorator
 
 ```typescript
-import { Command, Service, Action, Message } from 'discord-controller';
+import { Command, Service, Action } from 'discord-controller';
+import { Message } from 'discord.js';
 
 @Service()
 export class MyService {
