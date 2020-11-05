@@ -69,20 +69,20 @@
 
 You can change the command prefix from the default `!` by passing it into the command decorator
 
-    ```typescript
-    import { Command, Action, Message } from 'discord-controller';
+```typescript
+import { Command, Action, Message } from 'discord-controller';
 
-    @Command('&')
-    export class MyCommand extends Action {
-        constructor() {
-            super();
-        }
-
-        run(message: Message) {
-            message.channel.send('This command will reply to the user');
-        }
+@Command('&')
+export class MyCommand extends Action {
+    constructor() {
+        super();
     }
-    ```
+
+    run(message: Message) {
+        message.channel.send('This command will reply to the user');
+    }
+}
+```
 
 This will make the command respond to `&mycommand`
 
@@ -90,25 +90,25 @@ This will make the command respond to `&mycommand`
 
 If you are designing a command that has options, you can use `@Flag` in addition to `@Command` to add flags to your command.
 
-    ```typescript
-    import { Command, Flag, Action, Message } from 'discord-controller';
+```typescript
+import { Command, Flag, Action, Message } from 'discord-controller';
 
-    @Command()
-    export class MyCommand extends Action {
-        constructor() {
-            super();
-        }
-
-        run(message: Message) {
-            message.channel.send('This will be sent from the base command');
-        }
-
-        @Flag()
-        myFlag(message: Message) {
-            message.channel.send('This will be sent from the flag');
-        }
+@Command()
+export class MyCommand extends Action {
+    constructor() {
+        super();
     }
-    ```
+
+    run(message: Message) {
+        message.channel.send('This will be sent from the base command');
+    }
+
+    @Flag()
+    myFlag(message: Message) {
+        message.channel.send('This will be sent from the flag');
+    }
+}
+```
 
 `!mycommand` will respond with `"This will be sent from the base command"` and `!mycommand myflag` will respond with `"This will be sent from the flag"`
 
@@ -116,24 +116,24 @@ If you are designing a command that has options, you can use `@Flag` in addition
 
 `discord-controller` has inbuilt dependency injection that will work automatically when using the `@Service` decorator
 
-    ```typescript
-    import { Command, Service, Action, Message } from 'discord-controller';
+```typescript
+import { Command, Service, Action, Message } from 'discord-controller';
 
-    @Service()
-    export class MyService {
-        myFunction() {
-            return 'this is from a service';
-        }
+@Service()
+export class MyService {
+    myFunction() {
+        return 'this is from a service';
+    }
+}
+
+@Command()
+export class MyCommand extends Action {
+    constructor(private service: MyService) {
+        super();
     }
 
-    @Command()
-    export class MyCommand extends Action {
-        constructor(private service: MyService) {
-            super();
-        }
-
-        run(message: Message) {
-            message.channel.send(this.service.myFunction());
-        }
+    run(message: Message) {
+        message.channel.send(this.service.myFunction());
     }
-    ```
+}
+```
