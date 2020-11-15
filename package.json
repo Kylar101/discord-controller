@@ -6,6 +6,9 @@
   "scripts": {
     "start": "nodemon --exec ts-node ./src/example/bot.ts",
     "build": "tsc",
+    "pack": "mv ./build/src dist",
+    "package": "npm run build && npm run pack",
+    "clean": "rm -rf build",
     "test": "echo 'No tests created'",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix"
