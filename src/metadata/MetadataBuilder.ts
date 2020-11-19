@@ -1,6 +1,5 @@
 import { getMetadataStorage } from '../';
 import { FlagMetadataArgs } from './args';
-// import { CommandOptions } from '../commandOptions';
 import { CommandMetadata } from './CommandMetadata';
 import { FlagMetadata } from './FlagMetadata';
 import { MetadataStorage } from './MetadataStorage';
@@ -40,5 +39,9 @@ export class MetadataBuilder {
       const flag = new FlagMetadata(args);
       return flag;
     });
+  }
+
+  private createAuth(command: CommandMetadata) {
+    
   }
 }

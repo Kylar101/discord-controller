@@ -13,6 +13,7 @@ export class MetadataStorage {
     this.commands = [];
     this.services = [];
     this.flags = [];
+    this.authorized = [];
   }
 
   filterMetadataForCommands(classes: Function[]): CommandMetaDataArgs[] {
@@ -21,5 +22,9 @@ export class MetadataStorage {
 
   filterFlagsForTarget(target: Function): FlagMetadataArgs[] {
     return this.flags.filter(flag => flag.target === target);
+  }
+
+  filterAuthForTarget(target: Function): AuthorizedMetadataArgs[] {
+    return this.authorized.filter(auth => auth.target === target);
   }
 }
