@@ -1,33 +1,21 @@
 {
   "compilerOptions": {
+    "outDir": "./build",
+    "lib": [
+      "es6",
+      "ESNext.AsyncIterable"
+    ],
     "target": "es6",
     "module": "commonjs",
-    "lib": [
-      "dom",
-      "es6",
-      "es2017",
-      "esnext.asynciterable"
-    ],
-    "types": ["reflect-metadata", "node"],
-    "sourceMap": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
     "moduleResolution": "node",
-    "declaration": true,
-    "removeComments": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "noImplicitThis": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "resolveJsonModule": true,
-    "baseUrl": "."
-  }
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "declaration": true
+  },
+  "exclude": [
+    "build",
+    "node_modules"
+  ]
 }
