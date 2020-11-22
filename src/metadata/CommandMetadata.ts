@@ -1,7 +1,7 @@
 import { CommandMetaDataArgs } from './args/CommandMetadataArgs';
 import { FlagMetadata } from './FlagMetadata';
+import { AuthMetadata } from './AuthMetadata';
 import { DEFAULT_PREFIX } from '../contants';
-import { GuildMember } from 'discord.js';
 
 export class CommandMetadata {
 
@@ -9,7 +9,7 @@ export class CommandMetadata {
   prefix: string;
   options: any
   flags: FlagMetadata[];
-  authorise: (value: GuildMember) => boolean;
+  auth: AuthMetadata;
 
   constructor(args: CommandMetaDataArgs) {
     this.target = args.target;

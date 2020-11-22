@@ -3,6 +3,7 @@ import { FlagMetadataArgs } from './args';
 import { CommandMetadata } from './CommandMetadata';
 import { FlagMetadata } from './FlagMetadata';
 import { MetadataStorage } from './MetadataStorage';
+import { AuthMetadata } from './AuthMetadata';
 
 export class MetadataBuilder {
   private readonly metadataStorage: MetadataStorage;
@@ -20,6 +21,7 @@ export class MetadataBuilder {
     return commands.map(args => {
       const command = new CommandMetadata(args);
       command.flags = this.createFlags(command);
+      command.auth = this.createCommandAuth(command);
       return command;
     });
   }
@@ -29,7 +31,7 @@ export class MetadataBuilder {
     const flagsWithTarget: FlagMetadataArgs[] = [];
     while (target) {
       flagsWithTarget.push(
-        ...getMetadataStorage()
+        ...this.metadataStorage
           .filterFlagsForTarget(target)
           .filter(flag => flagsWithTarget.map(f => f.method).indexOf(flag.method) === -1)
       );
@@ -37,11 +39,20 @@ export class MetadataBuilder {
     }
     return flagsWithTarget.map(args => {
       const flag = new FlagMetadata(args);
+      flag.auth = this.createFlagAuth(command, flag.name);
       return flag;
-    });
+     });
   }
 
-  private createAuth(command: CommandMetadata) {
-    
+  private createCommandAuth(command: CommandMetadata) {
+    const target = command.target;
+    const auth = this.metadataStorage.filterAuthForCommand(target);
+    return new AuthMetadata(auth);
+  }
+
+  private createFlagAuth(command: CommandMetadata, method: string) {
+    const target = command.target;
+    const auth = this.metadataStorage.filterAuthForFlag(target, method);
+    return new AuthMetadata(auth);
   }
 }

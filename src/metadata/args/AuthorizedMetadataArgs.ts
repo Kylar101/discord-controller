@@ -1,4 +1,6 @@
-export type AuthFunction = () => boolean;
+import { GuildMember } from 'discord.js';
+
+export type AuthFunction = (value: GuildMember) => boolean;
 
 export interface AuthorizedMetadataArgs {
   target: Function;
