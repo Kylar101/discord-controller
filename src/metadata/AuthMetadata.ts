@@ -9,7 +9,6 @@ export class AuthMetadata {
   method: string|string[]|AuthFunction;
 
   constructor(args: AuthorizedMetadataArgs) {
-    console.log(args);
     this.flag = args.method;
     this.options = args.options;
     this.method = args.value;

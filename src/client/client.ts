@@ -1,4 +1,3 @@
-// import { ClientConfig } from './types';
 import { Client as DiscordClient, Message } from 'discord.js';
 import { CommandMetadata } from '../metadata/CommandMetadata';
 import { CommandOptions } from '../commandOptions';
@@ -28,7 +27,7 @@ export class Client {
           await compiled.run(message);
         }
         if (command.flags.length > 0) {
-          this.registerCommandFlags(command.flags, message, trigger, compiled);
+          await this.registerCommandFlags(command, message, trigger, compiled);
         }
       }
       catch (ex) {
@@ -46,13 +45,15 @@ export class Client {
     return `${command.prefix}${command.target.name.toLowerCase()}`;
   }
 
-  private async registerCommandFlags(flags: FlagMetadata[], message: Message, trigger: string, compiled: any): Promise<void> {
-    flags.forEach(async flag => {
+  private async registerCommandFlags(command: CommandMetadata, message: Message, trigger: string, compiled: any): Promise<void> {
+    for (let i = 0; i < command.flags.length; i++) {
+      const flag = command.flags[i];
       if (message.content.startsWith(this.getFlagTrigger(trigger, flag))) {
-        if (flag.auth) await flag.auth.authenticate(message);
+        if (command.auth) await command.auth.authenticate(message);
+        else if (flag.auth) await flag.auth.authenticate(message);
         await compiled[flag.name](message);
       }
-    });
+    }
   }
 
   private getFlagTrigger(baseTrigger: string, flag: FlagMetadata): string {

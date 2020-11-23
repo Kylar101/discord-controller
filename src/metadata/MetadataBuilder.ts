@@ -47,12 +47,14 @@ export class MetadataBuilder {
   private createCommandAuth(command: CommandMetadata) {
     const target = command.target;
     const auth = this.metadataStorage.filterAuthForCommand(target);
+    if (!auth) return;
     return new AuthMetadata(auth);
   }
 
   private createFlagAuth(command: CommandMetadata, method: string) {
     const target = command.target;
     const auth = this.metadataStorage.filterAuthForFlag(target, method);
+    if (!auth) return;
     return new AuthMetadata(auth);
   }
 }

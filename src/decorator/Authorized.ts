@@ -9,9 +9,8 @@ export function Authorized(method: AuthFunction): Function;
 
 export function Authorized(value: string|string[]|AuthFunction, options?: any): Function {
   return function (clsOrObject: Function, method?: string) {
-    console.log(method);
     getMetadataStorage().authorized.push({
-      target: clsOrObject,
+      target: method ? clsOrObject.constructor : clsOrObject,
       value,
       method,
       options
