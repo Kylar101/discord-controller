@@ -15,5 +15,5 @@ export function Authorized(value: string|string[]|AuthFunction, options?: any): 
       method,
       options
     });
-  }
+  };
 }

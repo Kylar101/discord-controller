@@ -26,7 +26,7 @@ export class AuthMetadata {
         break;
       case 'function':
         isAuthorised = this.method(author);
-        break
+        break;
       default:
         isAuthorised = false;
         break;

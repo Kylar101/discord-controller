@@ -41,7 +41,7 @@ export class MetadataBuilder {
       const flag = new FlagMetadata(args);
       flag.auth = this.createFlagAuth(command, flag.name);
       return flag;
-     });
+    });
   }
 
   private createCommandAuth(command: CommandMetadata) {
