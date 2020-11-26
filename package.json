@@ -1,6 +1,6 @@
 {
   "name": "discord-controller",
-  "version": "0.6.0-preview.0",
+  "version": "0.6.0",
   "description": "A wrapper around discord.js for easily creating discord bots with dependency injection",
   "main": "dist/index.js",
   "scripts": {
