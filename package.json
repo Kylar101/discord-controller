@@ -1,6 +1,6 @@
 {
   "name": "discord-controller",
-  "version": "0.5.1",
+  "version": "0.6.0-preview.0",
   "description": "A wrapper around discord.js for easily creating discord bots with dependency injection",
   "main": "dist/index.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "build": "tsc",
     "pack": "mv ./build/src dist",
     "package": "npm run build && npm run pack",
-    "clean": "rm -rf build",
+    "clean": "rm -rf build && rm -rf dist",
     "test": "echo 'No tests created'",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix"

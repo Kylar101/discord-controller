@@ -141,3 +141,24 @@ export class MyCommand extends Action {
     }
 }
 ```
+
+### Authorisation
+
+If you are designing a command that needs to be restricted to users with a particular role, you can use `@Authorized` in addition to `@Command` to restrict access.
+
+```typescript
+import { Command, Authorized, Action } from 'discord-controller';
+import { Message } from 'discord.js'
+
+@Authorized('AllowedRole')
+@Command()
+export class MyCommand extends Action {
+  constructor() {
+    super();
+  }
+
+  run(message: Message) {
+    message.channel.send('This command can be used by members who have the `AllowedRole` role');
+  }
+}
+```

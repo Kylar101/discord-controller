@@ -1,9 +1,9 @@
-// import { ClientConfig } from './types';
 import { Client as DiscordClient, Message } from 'discord.js';
 import { CommandMetadata } from '../metadata/CommandMetadata';
 import { CommandOptions } from '../commandOptions';
 import { Resolver } from '../injector';
 import { FlagMetadata } from '../metadata/FlagMetadata';
+import { BaseError } from '../errors/BaseError';
 
 export class Client {
   private readonly config: CommandOptions;
@@ -19,13 +19,20 @@ export class Client {
 
   registerActionCommand(command: CommandMetadata): void {
     const compiled = Resolver.resolve(command.target);
-    this.client.on('message', (message: Message): void => {
-      const trigger = this.getCommandTrigger(command);
-      if (message.content.startsWith(trigger) && !this.checkForFlag(command.flags, trigger, message)) {
-        compiled.run(message);
+    this.client.on('message', async (message: Message): Promise<void> => {
+      try {
+        const trigger = this.getCommandTrigger(command);
+        if (message.content.startsWith(trigger) && !this.checkForFlag(command.flags, trigger, message)) {
+          if (command.auth) await command.auth.authenticate(message);
+          await compiled.run(message);
+        }
+        if (command.flags.length > 0) {
+          await this.registerCommandFlags(command, message, trigger, compiled);
+        }
       }
-      if (command.flags.length > 0) {
-        this.registerCommandFlags(command.flags, message, trigger, compiled);
+      catch (ex) {
+        const error = ex as BaseError;
+        message.reply(`\`\`\` ${error.name.toLocaleUpperCase()} \n ${error.message}\`\`\``);
       }
     });
   }
@@ -38,12 +45,15 @@ export class Client {
     return `${command.prefix}${command.target.name.toLowerCase()}`;
   }
 
-  private registerCommandFlags(flags: FlagMetadata[], message: Message, trigger: string, compiled: any): void {
-    flags.forEach(flag => {
+  private async registerCommandFlags(command: CommandMetadata, message: Message, trigger: string, compiled: any): Promise<void> {
+    for (let i = 0; i < command.flags.length; i++) {
+      const flag = command.flags[i];
       if (message.content.startsWith(this.getFlagTrigger(trigger, flag))) {
-        compiled[flag.name](message);
+        if (command.auth) await command.auth.authenticate(message);
+        else if (flag.auth) await flag.auth.authenticate(message);
+        await compiled[flag.name](message);
       }
-    });
+    }
   }
 
   private getFlagTrigger(baseTrigger: string, flag: FlagMetadata): string {
