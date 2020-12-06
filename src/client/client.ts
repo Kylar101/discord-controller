@@ -1,4 +1,4 @@
-import { Client as DiscordClient, Message } from 'discord.js';
+import { Client as DiscordClient, Collection, Message } from 'discord.js';
 import { CommandMetadata } from '../metadata/CommandMetadata';
 import { CommandOptions } from '../commandOptions';
 import { Resolver } from '../injector';
@@ -8,6 +8,7 @@ import { BaseError } from '../errors/BaseError';
 export class Client {
   private readonly config: CommandOptions;
   client: DiscordClient;
+  private commands: Collection<string, any>;
 
   constructor(config: CommandOptions) {
     this.config = config;
@@ -15,6 +16,10 @@ export class Client {
     this.client.once('ready', (): void => {
       console.log('ready');
     });
+  }
+
+  registerCommand(command: CommandMetadata) {
+    this.commands.set('test', command);
   }
 
   registerActionCommand(command: CommandMetadata): void {
