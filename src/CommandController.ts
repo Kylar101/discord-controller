@@ -15,4 +15,10 @@ export class CommandController {
     });
     return this;
   }
+
+  registerListeners(classes?: Function[]): this {
+    const listeners = this.metadataBuilder.buildListenerMetadata(classes);
+    listeners.map(listener => {});
+    return this;
+  }
 }
