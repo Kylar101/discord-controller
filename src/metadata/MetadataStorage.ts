@@ -1,10 +1,12 @@
 import { CommandMetaDataArgs } from './args/CommandMetadataArgs';
+import { ListenerMetadataArgs } from './args/ListenerMetadataArgs';
 import { FlagMetadataArgs } from './args/FlagMetadataArgs';
 import { ServiceMetadataArgs } from './args/ServiceMetadataArgs';
 import { AuthorizedMetadataArgs } from './args/AuthorizedMetadataArgs';
 
 export class MetadataStorage {
   commands: CommandMetaDataArgs[];
+  listeners: ListenerMetadataArgs[];
   services: ServiceMetadataArgs[];
   flags: FlagMetadataArgs[];
   authorized: AuthorizedMetadataArgs[];

@@ -1,5 +1,4 @@
 import { Client } from './client/client';
-// import { CommandOptions } from './commandOptions';
 import { MetadataBuilder } from './metadata/MetadataBuilder';
 
 export class CommandController {

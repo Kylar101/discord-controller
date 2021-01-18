@@ -3,7 +3,6 @@ import { FlagMetadataArgs } from './args';
 import { CommandMetadata } from './CommandMetadata';
 import { FlagMetadata } from './FlagMetadata';
 import { MetadataStorage } from './MetadataStorage';
-import { AuthMetadata } from './AuthMetadata';
 
 export class MetadataBuilder {
   private readonly metadataStorage: MetadataStorage;
@@ -16,6 +15,10 @@ export class MetadataBuilder {
     return this.createCommands(classes);
   }
 
+  buildListenerMetadata(classes?: Function[] {
+    return this.createListeners(classes);
+  }
+
   private createCommands(classes?: Function[]): CommandMetadata[] {
     const commands = classes ? this.metadataStorage.filterMetadataForCommands(classes) : this.metadataStorage.commands;
     return commands.map(args => {
@@ -24,6 +27,10 @@ export class MetadataBuilder {
       command.auth = this.createCommandAuth(command);
       return command;
     });
+  }
+
+  private createListeners(classes?: Function[]) {
+
   }
 
   private createFlags(command: CommandMetadata): FlagMetadata[] {
