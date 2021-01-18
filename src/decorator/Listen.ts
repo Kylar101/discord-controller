@@ -7,5 +7,5 @@ export function Listen(event: DiscordEvents): Function {
       target: object,
       event
     });
-  }
+  };
 }

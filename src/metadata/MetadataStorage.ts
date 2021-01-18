@@ -13,6 +13,7 @@ export class MetadataStorage {
 
   constructor() {
     this.commands = [];
+    this.listeners = [];
     this.services = [];
     this.flags = [];
     this.authorized = [];
@@ -20,6 +21,10 @@ export class MetadataStorage {
 
   filterMetadataForCommands(classes: Function[]): CommandMetaDataArgs[] {
     return this.commands.filter(command => classes.filter(cls => command.target === cls).length > 0);
+  }
+
+  filterMetadataForListeners(classes: Function[]): ListenerMetadataArgs[] {
+    return this.listeners.filter(listener => classes.filter(cls => listener.target === cls).length > 0);
   }
 
   filterFlagsForTarget(target: Function): FlagMetadataArgs[] {

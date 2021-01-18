@@ -1,6 +1,7 @@
 import { getMetadataStorage } from '../';
 import { FlagMetadataArgs } from './args';
 import { CommandMetadata } from './CommandMetadata';
+import { ListenerMetadata } from './ListenerMetadata';
 import { FlagMetadata } from './FlagMetadata';
 import { MetadataStorage } from './MetadataStorage';
 import { AuthMetadata } from './AuthMetadata';
@@ -31,7 +32,11 @@ export class MetadataBuilder {
   }
 
   private createListeners(classes?: Function[]) {
-
+    const listeners = classes ? this.metadataStorage.filterMetadataForListeners(classes) : this.metadataStorage.listeners;
+    return listeners.map(args => {
+      const listener = new ListenerMetadata(args);
+      return listener;
+    });
   }
 
   private createFlags(command: CommandMetadata): FlagMetadata[] {
