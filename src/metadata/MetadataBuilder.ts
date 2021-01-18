@@ -3,6 +3,7 @@ import { FlagMetadataArgs } from './args';
 import { CommandMetadata } from './CommandMetadata';
 import { FlagMetadata } from './FlagMetadata';
 import { MetadataStorage } from './MetadataStorage';
+import { AuthMetadata } from './AuthMetadata';
 
 export class MetadataBuilder {
   private readonly metadataStorage: MetadataStorage;
@@ -15,7 +16,7 @@ export class MetadataBuilder {
     return this.createCommands(classes);
   }
 
-  buildListenerMetadata(classes?: Function[] {
+  buildListenerMetadata(classes?: Function[]) {
     return this.createListeners(classes);
   }
 
