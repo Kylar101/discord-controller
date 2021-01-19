@@ -45,5 +45,5 @@ function createExecutor(client: Client, options: CommandOptions) {
     listenerClasses.push(...importClassesFromDirectories(listenerDirs));
   }
 
-  new CommandController(client).registerCommands(commandClasses);
+  new CommandController(client).registerCommands(commandClasses).registerListeners(listenerClasses);
 }

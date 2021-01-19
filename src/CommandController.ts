@@ -18,7 +18,7 @@ export class CommandController {
 
   registerListeners(classes?: Function[]): this {
     const listeners = this.metadataBuilder.buildListenerMetadata(classes);
-    listeners.map(listener => {});
+    listeners.map(listener => this.client.registerListeners(listener));
     return this;
   }
 }

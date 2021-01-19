@@ -1,5 +1,6 @@
 import { Client as DiscordClient, Message } from 'discord.js';
 import { CommandMetadata } from '../metadata/CommandMetadata';
+import { ListenerMetadata } from '../metadata/ListenerMetadata';
 import { CommandOptions } from '../commandOptions';
 import { Resolver } from '../injector';
 import { FlagMetadata } from '../metadata/FlagMetadata';
@@ -28,6 +29,22 @@ export class Client {
         }
         if (command.flags.length > 0) {
           await this.registerCommandFlags(command, message, trigger, compiled);
+        }
+      }
+      catch (ex) {
+        const error = ex as BaseError;
+        message.reply(`\`\`\` ${error.name.toLocaleUpperCase()} \n ${error.message}\`\`\``);
+      }
+    });
+  }
+
+  registerListeners(listener: ListenerMetadata) {
+    const compiled = Resolver.resolve(listener.target);
+    this.client.on(listener.event, async (message: Message): Promise<void> => {
+      try {
+        const canRun = await compiled['listen'](message);
+        if (canRun) {
+          await compiled['run'](message);
         }
       }
       catch (ex) {
