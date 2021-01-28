@@ -17,7 +17,7 @@ export class MetadataBuilder {
     return this.createCommands(classes);
   }
 
-  buildListenerMetadata(classes?: Function[]) {
+  buildListenerMetadata(classes?: Function[]): ListenerMetadata[] {
     return this.createListeners(classes);
   }
 
@@ -31,7 +31,7 @@ export class MetadataBuilder {
     });
   }
 
-  private createListeners(classes?: Function[]) {
+  private createListeners(classes?: Function[]): ListenerMetadata[] {
     const listeners = classes ? this.metadataStorage.filterMetadataForListeners(classes) : this.metadataStorage.listeners;
     return listeners.map(args => {
       const listener = new ListenerMetadata(args);

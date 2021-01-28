@@ -1,5 +1,6 @@
 export enum DiscordEvents {
   Message = 'message',
-  MessageDelete = 'messageDelete',
-  messageUpdate = 'messageUpdate'
+  // MessageDelete = 'messageDelete',
+  // MessageUpdate = 'messageUpdate',
+  // MessageReactionAdd = 'messageReactionAdd'
 }

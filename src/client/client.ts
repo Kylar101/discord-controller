@@ -5,6 +5,7 @@ import { CommandOptions } from '../commandOptions';
 import { Resolver } from '../injector';
 import { FlagMetadata } from '../metadata/FlagMetadata';
 import { BaseError } from '../errors/BaseError';
+import { Listener, Action } from '../commands';
 
 export class Client {
   private readonly config: CommandOptions;
@@ -19,7 +20,7 @@ export class Client {
   }
 
   registerActionCommand(command: CommandMetadata): void {
-    const compiled = Resolver.resolve(command.target);
+    const compiled = Resolver.resolve<Action>(command.target);
     this.client.on('message', async (message: Message): Promise<void> => {
       try {
         const trigger = this.getCommandTrigger(command);
@@ -38,18 +39,20 @@ export class Client {
     });
   }
 
-  registerListeners(listener: ListenerMetadata) {
-    const compiled = Resolver.resolve(listener.target);
+  registerListeners(listener: ListenerMetadata): void {
+    const compiled = Resolver.resolve<Listener>(listener.target);
+    console.log(`Lisening on ${listener.event} event`);
     this.client.on(listener.event, async (message: Message): Promise<void> => {
       try {
-        const canRun = await compiled['listen'](message);
+        const canRun = await compiled.listen(message);
+        console.log(`Listener can run: ${canRun}`);
         if (canRun) {
-          await compiled['run'](message);
+          await compiled.run(message);
         }
       }
       catch (ex) {
         const error = ex as BaseError;
-        message.reply(`\`\`\` ${error.name.toLocaleUpperCase()} \n ${error.message}\`\`\``);
+        console.log(`\`\`\` ${error.name.toLocaleUpperCase()} \n ${error.message}\`\`\``);
       }
     });
   }

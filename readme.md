@@ -10,7 +10,7 @@
 2. `reflect-metadata` shim is required
 
     `npm install reflect-metadata`
-   
+
    and make sure to import it before using discord-controller
 
 3. Its important to set the following options in the `tsconfig.json` file of your project
@@ -162,3 +162,30 @@ export class MyCommand extends Action {
   }
 }
 ```
+
+### Listeners
+
+If you are to monitor for a certain action being performed, you can use `@Listen` and pass in the event that you wish to monitor
+
+> NOTE: Currently only available for monitoring messages
+
+```typepscript
+import { Listen, DiscordEvents, Listener } from 'discord-controller';
+import { Message } from 'discord.js';
+
+@Listen(DiscordEvents.Message)
+export class MyListener extends Listener {
+  constructor() {
+    super();
+  }
+
+  listen(message: Message) {
+    return message.content.includes('hello');
+  }
+
+  run(message: Message) {
+    message.channel.send('someone sent a greeting');
+  }
+}
+```
+
