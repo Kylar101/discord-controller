@@ -41,11 +41,9 @@ export class Client {
 
   registerListeners(listener: ListenerMetadata): void {
     const compiled = Resolver.resolve<Listener>(listener.target);
-    console.log(`Lisening on ${listener.event} event`);
     this.client.on(listener.event, async (message: Message): Promise<void> => {
       try {
         const canRun = await compiled.listen(message);
-        console.log(`Listener can run: ${canRun}`);
         if (canRun) {
           await compiled.run(message);
         }
