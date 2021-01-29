@@ -1,9 +1,11 @@
 import { Client as DiscordClient, Message } from 'discord.js';
 import { CommandMetadata } from '../metadata/CommandMetadata';
+import { ListenerMetadata } from '../metadata/ListenerMetadata';
 import { CommandOptions } from '../commandOptions';
 import { Resolver } from '../injector';
 import { FlagMetadata } from '../metadata/FlagMetadata';
 import { BaseError } from '../errors/BaseError';
+import { Listener, Action } from '../commands';
 
 export class Client {
   private readonly config: CommandOptions;
@@ -18,7 +20,7 @@ export class Client {
   }
 
   registerActionCommand(command: CommandMetadata): void {
-    const compiled = Resolver.resolve(command.target);
+    const compiled = Resolver.resolve<Action>(command.target);
     this.client.on('message', async (message: Message): Promise<void> => {
       try {
         const trigger = this.getCommandTrigger(command);
@@ -33,6 +35,22 @@ export class Client {
       catch (ex) {
         const error = ex as BaseError;
         message.reply(`\`\`\` ${error.name.toLocaleUpperCase()} \n ${error.message}\`\`\``);
+      }
+    });
+  }
+
+  registerListeners(listener: ListenerMetadata): void {
+    const compiled = Resolver.resolve<Listener>(listener.target);
+    this.client.on(listener.event, async (message: Message): Promise<void> => {
+      try {
+        const canRun = await compiled.listen(message);
+        if (canRun) {
+          await compiled.run(message);
+        }
+      }
+      catch (ex) {
+        const error = ex as BaseError;
+        console.log(`\`\`\` ${error.name.toLocaleUpperCase()} \n ${error.message}\`\`\``);
       }
     });
   }

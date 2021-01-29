@@ -1,5 +1,4 @@
 import { Client } from './client/client';
-// import { CommandOptions } from './commandOptions';
 import { MetadataBuilder } from './metadata/MetadataBuilder';
 
 export class CommandController {
@@ -14,6 +13,12 @@ export class CommandController {
     commands.map(command => {
       this.client.registerActionCommand(command);
     });
+    return this;
+  }
+
+  registerListeners(classes?: Function[]): this {
+    const listeners = this.metadataBuilder.buildListenerMetadata(classes);
+    listeners.map(listener => this.client.registerListeners(listener));
     return this;
   }
 }

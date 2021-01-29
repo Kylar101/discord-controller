@@ -1,6 +1,7 @@
 import { getMetadataStorage } from '../';
 import { FlagMetadataArgs } from './args';
 import { CommandMetadata } from './CommandMetadata';
+import { ListenerMetadata } from './ListenerMetadata';
 import { FlagMetadata } from './FlagMetadata';
 import { MetadataStorage } from './MetadataStorage';
 import { AuthMetadata } from './AuthMetadata';
@@ -16,6 +17,10 @@ export class MetadataBuilder {
     return this.createCommands(classes);
   }
 
+  buildListenerMetadata(classes?: Function[]): ListenerMetadata[] {
+    return this.createListeners(classes);
+  }
+
   private createCommands(classes?: Function[]): CommandMetadata[] {
     const commands = classes ? this.metadataStorage.filterMetadataForCommands(classes) : this.metadataStorage.commands;
     return commands.map(args => {
@@ -23,6 +28,14 @@ export class MetadataBuilder {
       command.flags = this.createFlags(command);
       command.auth = this.createCommandAuth(command);
       return command;
+    });
+  }
+
+  private createListeners(classes?: Function[]): ListenerMetadata[] {
+    const listeners = classes ? this.metadataStorage.filterMetadataForListeners(classes) : this.metadataStorage.listeners;
+    return listeners.map(args => {
+      const listener = new ListenerMetadata(args);
+      return listener;
     });
   }
 

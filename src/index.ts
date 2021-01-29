@@ -11,6 +11,7 @@ export * from './decorator';
 export * from './client';
 export * from './commands';
 export * from './utils';
+export * from './types';
 
 export function getMetadataStorage(): MetadataStorage {
   if (!(global as any).metaDataStorage)
@@ -37,5 +38,12 @@ function createExecutor(client: Client, options: CommandOptions) {
     commandClasses.push(...importClassesFromDirectories(commandDirs));
   }
 
-  new CommandController(client).registerCommands(commandClasses);
+  let listenerClasses: Function[] = [];
+  if (options && options.listeners && options.listeners.length) {
+    listenerClasses = (options.listeners as any[]).filter(listener => listener instanceof Function);
+    const listenerDirs = (options.listeners as any[]).filter(listener => typeof listener === 'string');
+    listenerClasses.push(...importClassesFromDirectories(listenerDirs));
+  }
+
+  new CommandController(client).registerCommands(commandClasses).registerListeners(listenerClasses);
 }
