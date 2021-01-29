@@ -169,7 +169,7 @@ If you are to monitor for a certain action being performed, you can use `@Listen
 
 > NOTE: Currently only available for monitoring messages
 
-```typepscript
+```typescript
 import { Listen, DiscordEvents, Listener } from 'discord-controller';
 import { Message } from 'discord.js';
 
