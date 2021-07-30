@@ -26,7 +26,8 @@ export class Client {
         const trigger = this.getCommandTrigger(command);
         if (message.content.startsWith(trigger) && !this.checkForFlag(command.flags, trigger, message)) {
           if (command.auth) await command.auth.authenticate(message);
-          await compiled.run(message);
+          const args = this.getCommandArgs(message, trigger);
+          await compiled.run(message, args);
         }
         if (command.flags.length > 0) {
           await this.registerCommandFlags(command, message, trigger, compiled);
@@ -66,12 +67,18 @@ export class Client {
   private async registerCommandFlags(command: CommandMetadata, message: Message, trigger: string, compiled: any): Promise<void> {
     for (let i = 0; i < command.flags.length; i++) {
       const flag = command.flags[i];
-      if (message.content.startsWith(this.getFlagTrigger(trigger, flag))) {
+      const flagTrigger = this.getFlagTrigger(trigger, flag);
+      if (message.content.startsWith(flagTrigger)) {
         if (command.auth) await command.auth.authenticate(message);
         else if (flag.auth) await flag.auth.authenticate(message);
-        await compiled[flag.name](message);
+        const args = this.getCommandArgs(message, flagTrigger);
+        await compiled[flag.name](message, args);
       }
     }
+  }
+
+  private getCommandArgs(message: Message, trigger: string) {
+    return message.content.slice(trigger.length).trim().split(' ');
   }
 
   private getFlagTrigger(baseTrigger: string, flag: FlagMetadata): string {
