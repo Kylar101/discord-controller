@@ -1,6 +1,6 @@
-import { DiscordEvents } from '../../types';
+import { ClientEvents } from 'discord.js';
 
 export interface ListenerMetadataArgs {
   target: Function;
-  event: DiscordEvents;
+  event: keyof ClientEvents;
 }

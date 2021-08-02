@@ -1,10 +1,10 @@
 import { ListenerMetadataArgs } from './args/ListenerMetadataArgs';
-import { DiscordEvents } from '../types';
+import { ClientEvents } from 'discord.js';
 
 export class ListenerMetadata {
 
   target: Function;
-  event: DiscordEvents;
+  event: keyof ClientEvents;
 
   constructor(args: ListenerMetadataArgs) {
     this.target = args.target;
