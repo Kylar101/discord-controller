@@ -1,7 +1,8 @@
 import { ClientEvents } from 'discord.js';
 import { getMetadataStorage } from '../';
+import { DiscordEvents } from '../types';
 
-export function Listen(event: keyof ClientEvents): Function {
+export function Listen(event: DiscordEvents): Function {
   return function(object: Function) {
     getMetadataStorage().listeners.push({
       target: object,
