@@ -1,4 +1,4 @@
-import { Client as DiscordClient, Message, ClientEvents } from 'discord.js';
+import { Client as DiscordClient, Message } from 'discord.js';
 import { CommandMetadata } from '../metadata/CommandMetadata';
 import { ListenerMetadata } from '../metadata/ListenerMetadata';
 import { CommandOptions } from '../commandOptions';

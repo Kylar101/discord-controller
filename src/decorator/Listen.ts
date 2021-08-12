@@ -1,4 +1,3 @@
-import { ClientEvents } from 'discord.js';
 import { getMetadataStorage } from '../';
 import { DiscordEvents } from '../types';
 
