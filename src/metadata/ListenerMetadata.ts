@@ -8,6 +8,6 @@ export class ListenerMetadata {
 
   constructor(args: ListenerMetadataArgs) {
     this.target = args.target;
-    this.event = args.event;
+    this.event = args.event as keyof ClientEvents;
   }
 }
