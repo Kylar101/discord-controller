@@ -42,11 +42,11 @@ export class Client {
 
   registerListeners(listener: ListenerMetadata): void {
     const compiled = Resolver.resolve<Listener>(listener.target);
-    this.client.on(listener.event, async (message: Message): Promise<void> => {
+    this.client.on(listener.event, async (...args): Promise<void> => {
       try {
-        const canRun = await compiled.listen(message);
+        const canRun = await compiled.listen(args as any);
         if (canRun) {
-          await compiled.run(message);
+          await compiled.run(args as any);
         }
       }
       catch (ex) {

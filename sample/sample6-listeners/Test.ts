@@ -1,17 +1,16 @@
-import { Message } from 'discord.js';
+import { ClientEvents } from 'discord.js';
 import { Listener, DiscordEvents, Listen } from '../../src/';
 
 @Listen(DiscordEvents.Message)
-export class Test extends Listener {
-  constructor() {
-    super();
-  }
+export class Test implements Listener<DiscordEvents.Message> {
 
-  listen(message: Message) {
+  listen(parameters: ClientEvents[DiscordEvents.Message]) {
+    const [ message ] = parameters;
     return message.content.includes('hello');
   }
 
-  run(message: Message) {
+  run(parameters: ClientEvents[DiscordEvents.Message]) {
+    const [ message ] = parameters;
     message.channel.send('someone sent a greeting');
   }
 }

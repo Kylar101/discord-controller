@@ -167,25 +167,23 @@ export class MyCommand extends Action {
 
 If you are to monitor for a certain action being performed, you can use `@Listen` and pass in the event that you wish to monitor
 
-> NOTE: Currently only available for monitoring messages
-
 ```typescript
 import { Listen, DiscordEvents, Listener } from 'discord-controller';
-import { Message } from 'discord.js';
+import { ClientEvents } from 'discord.js';
 
 @Listen(DiscordEvents.Message)
-export class MyListener extends Listener {
-  constructor() {
-    super();
-  }
+export class MyListener implements Listener<DiscordEvents.Message> {
 
-  listen(message: Message) {
+  listen(parameters: ClientEvents[DiscordEvents.Message]) {
+    const [ message ] = parameters;
     return message.content.includes('hello');
   }
 
-  run(message: Message) {
+  run(parameters: ClientEvents[DiscordEvents.Message]) {
+    const [ message ] = parameters;
     message.channel.send('someone sent a greeting');
   }
 }
 ```
 
+To view supported events visit the [discord.js documentation](https://discord.js.org/#/docs/main/stable/class/Client?scrollTo=e-channelCreate)

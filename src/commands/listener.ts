@@ -1,6 +1,6 @@
-import { Message } from 'discord.js';
+import { ClientEvents } from 'discord.js';
 
-export abstract class Listener {
-  abstract listen(message: Message): boolean | Promise<boolean>;
-  abstract run(message: Message): void | Promise<void>;
+export interface Listener<K extends keyof ClientEvents = 'message'> {
+  listen(parameters: ClientEvents[K]): boolean | Promise<boolean>;
+  run(parameters: ClientEvents[K]): void | Promise<void>;
 }
