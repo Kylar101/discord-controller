@@ -88,6 +88,7 @@ export class Client {
   private checkForFlag(flags: FlagMetadata[], trigger: string, message: Message): boolean {
     const flagTriggers = flags.map(flag => `${trigger} ${flag.name}`);
     const reduce = flagTriggers.reduce((_val, cur) => {
+      if (_val) return _val;
       return message.content.includes(cur);
     }, false);
     return reduce;
