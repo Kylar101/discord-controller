@@ -15,7 +15,7 @@ export * from './types';
 
 export function getMetadataStorage(): MetadataStorage {
   if (!(global as any).metaDataStorage)
-      (global as any).metaDataStorage = new MetadataStorage();
+    (global as any).metaDataStorage = new MetadataStorage();
 
   return (global as any).metaDataStorage;
 }

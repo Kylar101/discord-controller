@@ -7,7 +7,7 @@ export class CommandMetadata {
 
   target: Function;
   prefix: string;
-  options: any
+  options: any;
   flags: FlagMetadata[];
   auth: AuthMetadata;
 
