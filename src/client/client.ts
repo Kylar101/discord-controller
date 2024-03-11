@@ -1,44 +1,75 @@
-import { Client as DiscordClient, Message } from 'discord.js';
+import { Client as DiscordClient, Events, GatewayIntentBits, Message, SlashCommandBuilder, Interaction } from 'discord.js';
 import { CommandMetadata } from '../metadata/CommandMetadata';
 import { ListenerMetadata } from '../metadata/ListenerMetadata';
-import { CommandOptions } from '../commandOptions';
+import { BotOptions } from '../BotOptions';
 import { Resolver } from '../injector';
 import { FlagMetadata } from '../metadata/FlagMetadata';
 import { BaseError } from '../errors/BaseError';
 import { Listener, Action } from '../commands';
+import { CommandBuilder } from '../metadata/CommandBuilder';
 
 export class Client {
-  private readonly config: CommandOptions;
+  private readonly config: BotOptions;
   client: DiscordClient;
 
-  constructor(config: CommandOptions) {
+  constructor(config: BotOptions) {
     this.config = config;
-    this.client = new DiscordClient();
-    this.client.once('ready', (): void => {
+    this.client = new DiscordClient({ intents: [GatewayIntentBits.Guilds] });
+    this.client.once(Events.ClientReady, (): void => {
       console.log('ready');
     });
   }
 
-  registerActionCommand(command: CommandMetadata): void {
+  registerActionCommand(command: CommandMetadata): CommandBuilder {
     const compiled = Resolver.resolve<Action>(command.target);
-    this.client.on('message', async (message: Message): Promise<void> => {
-      try {
-        const trigger = this.getCommandTrigger(command);
-        if (message.content.startsWith(trigger) && !this.checkForFlag(command.flags, trigger, message)) {
-          if (command.auth) await command.auth.authenticate(message);
-          const args = this.getCommandArgs(message, trigger);
-          await compiled.run(message, args);
-        }
-        if (command.flags.length > 0) {
-          await this.registerCommandFlags(command, message, trigger, compiled);
-        }
+    return {
+      data: new SlashCommandBuilder()
+        .setName(command.target.name.toLowerCase())
+        .setDescription(command.options.description),
+      async execute(interaction: Interaction) {
+        await compiled.run(interaction);
       }
-      catch (ex) {
-        const error = ex as BaseError;
-        message.reply(`\`\`\` ${error.name.toLocaleUpperCase()} \n ${error.message}\`\`\``);
+    };
+  }
+
+  resolveCommands(command: CommandBuilder): void {
+    this.client.on(Events.InteractionCreate, async (interaction: Interaction): Promise<void> => {
+      if (!interaction.isCommand()) return;
+      if (interaction.commandName === command.data.name) {
+        try {
+          await command.execute(interaction);
+        } catch (error) {
+          console.error(error);
+          if (interaction.replied || interaction.deferred) {
+            await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
+          } else {
+            await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+          }
+        }
       }
     });
   }
+
+  // registerActionCommand(command: CommandMetadata): void {
+  //   const compiled = Resolver.resolve<Action>(command.target);
+  //   this.client.on('message', async (message: Message): Promise<void> => {
+  //     try {
+  //       const trigger = this.getCommandTrigger(command);
+  //       if (message.content.startsWith(trigger) && !this.checkForFlag(command.flags, trigger, message)) {
+  //         if (command.auth) await command.auth.authenticate(message);
+  //         const args = this.getCommandArgs(message, trigger);
+  //         await compiled.run(message, args);
+  //       }
+  //       if (command.flags.length > 0) {
+  //         await this.registerCommandFlags(command, message, trigger, compiled);
+  //       }
+  //     }
+  //     catch (ex) {
+  //       const error = ex as BaseError;
+  //       message.reply(`\`\`\` ${error.name.toLocaleUpperCase()} \n ${error.message}\`\`\``);
+  //     }
+  //   });
+  // }
 
   registerListeners(listener: ListenerMetadata): void {
     const compiled = Resolver.resolve<Listener>(listener.target);

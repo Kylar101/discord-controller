@@ -1,10 +1,10 @@
 import { Client } from './client/client';
 import { CommandController } from './CommandController';
-import { CommandOptions } from './commandOptions';
+import { BotOptions } from './BotOptions';
 import { MetadataStorage } from './metadata/MetadataStorage';
 import { importClassesFromDirectories } from './utils/importClassesFromDirectories';
 
-export * from './commandOptions';
+export * from './BotOptions';
 export * from './CommandController';
 export * from './metadata';
 export * from './decorator';
@@ -20,17 +20,17 @@ export function getMetadataStorage(): MetadataStorage {
   return (global as any).metaDataStorage;
 }
 
-export function createServer(options: CommandOptions): Client {
+export async function createServer(options: BotOptions): Promise<Client> {
   const client = new Client(options);
   return managerServer(client, options);
 }
 
-function managerServer(client: Client, options: CommandOptions): Client {
+async function managerServer(client: Client, options: BotOptions): Promise<Client> {
   createExecutor(client, options);
   return client;
 }
 
-function createExecutor(client: Client, options: CommandOptions) {
+async function createExecutor(client: Client, options: BotOptions) {
   let commandClasses: Function[] = [];
   if (options && options.commands && options.commands.length) {
     commandClasses = (options.commands as any[]).filter(command => command instanceof Function);
@@ -45,5 +45,5 @@ function createExecutor(client: Client, options: CommandOptions) {
     listenerClasses.push(...importClassesFromDirectories(listenerDirs));
   }
 
-  new CommandController(client).registerCommands(commandClasses).registerListeners(listenerClasses);
+  (await new CommandController(client, options).registerCommands(commandClasses)).resolveCommands().registerListeners(listenerClasses);
 }

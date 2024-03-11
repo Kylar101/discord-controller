@@ -1,5 +1,5 @@
-import { Message } from 'discord.js';
+import { Interaction } from 'discord.js';
 
 export abstract class Action {
-  abstract run(message: Message, args?: string[]): Promise<void> | void;
+  abstract run(message: Interaction): Promise<void> | void;
 }

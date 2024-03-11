@@ -1,18 +1,34 @@
+import { REST, Routes } from 'discord.js';
 import { Client } from './client/client';
+import { BotOptions } from './BotOptions';
+import { CommandBuilder } from './metadata/CommandBuilder';
 import { MetadataBuilder } from './metadata/MetadataBuilder';
 
 export class CommandController {
   private metadataBuilder: MetadataBuilder;
+  private buildCommands: CommandBuilder[] = [];
 
-  constructor(private client: Client) {
+  constructor(private client: Client, private options: BotOptions) {
     this.metadataBuilder = new MetadataBuilder();
   }
 
-  registerCommands(classes?: Function[]): this {
+  async registerCommands(classes?: Function[]): Promise<this> {
     const commands = this.metadataBuilder.buildCommandMetadata(classes);
-    commands.map(command => {
-      this.client.registerActionCommand(command);
-    });
+    this.buildCommands = commands.map(command => this.client.registerActionCommand(command));
+    const data = this.buildCommands.map(command => command.data.toJSON());
+    const rest = new REST().setToken(this.options.token);
+    try {
+      console.log(`Registering ${data.length} commands`);
+      const registered: any = await rest.put(Routes.applicationGuildCommands(this.options.clientId, this.options.guildId), { body: data });
+      console.log(`Successfully registered ${registered.length} commands`);
+    } catch (err) {
+      console.log('unable to register commands', err);
+    }
+    return this;
+  }
+
+  resolveCommands(): this {
+    this.buildCommands.map(command => this.client.resolveCommands(command));
     return this;
   }
 
