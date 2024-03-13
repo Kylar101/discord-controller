@@ -22,7 +22,7 @@ export class CommandController {
       const registered: any = await rest.put(Routes.applicationGuildCommands(this.options.clientId, this.options.guildId), { body: data });
       console.log(`Successfully registered ${registered.length} commands`);
     } catch (err) {
-      console.log('unable to register commands', err);
+      console.log('unable to register commands', JSON.stringify(err, null, 2));
     }
     return this;
   }

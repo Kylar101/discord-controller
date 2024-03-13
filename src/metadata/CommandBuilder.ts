@@ -1,6 +1,8 @@
 import { Interaction, SlashCommandBuilder } from 'discord.js';
+import { FlagMetadata } from './FlagMetadata';
 
 export type CommandBuilder = {
   data: SlashCommandBuilder,
-  execute(interaction: Interaction): Promise<void>
+  flags: FlagMetadata[],
+  execute(interaction: Interaction, ...flags: any[]): Promise<void>
 }

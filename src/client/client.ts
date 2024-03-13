@@ -7,6 +7,7 @@ import { FlagMetadata } from '../metadata/FlagMetadata';
 import { BaseError } from '../errors/BaseError';
 import { Listener, Action } from '../commands';
 import { CommandBuilder } from '../metadata/CommandBuilder';
+import { FlagType } from '../metadata';
 
 export class Client {
   private readonly config: BotOptions;
@@ -14,7 +15,14 @@ export class Client {
 
   constructor(config: BotOptions) {
     this.config = config;
-    this.client = new DiscordClient({ intents: [GatewayIntentBits.Guilds] });
+    this.client = new DiscordClient({
+      intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent,
+        ...config.permissions
+      ]
+    });
     this.client.once(Events.ClientReady, (): void => {
       console.log('ready');
     });
@@ -22,14 +30,64 @@ export class Client {
 
   registerActionCommand(command: CommandMetadata): CommandBuilder {
     const compiled = Resolver.resolve<Action>(command.target);
+    const data = new SlashCommandBuilder()
+      .setName(command.target.name.toLowerCase())
+      .setDescription(command.options.description);
+    this.registerFlags(data, command.flags);
     return {
-      data: new SlashCommandBuilder()
-        .setName(command.target.name.toLowerCase())
-        .setDescription(command.options.description),
-      async execute(interaction: Interaction) {
-        await compiled.run(interaction);
+      data,
+      flags: command.flags,
+      async execute(interaction: Interaction, ...flags: any[]) {
+        await compiled.run(interaction, ...flags);
       }
     };
+  }
+
+  private registerFlags(command: SlashCommandBuilder, flags: FlagMetadata[]): void {
+    flags.forEach(flag => {
+      const name = flag.name.toLowerCase();
+      const description = flag.options.description;
+      switch (flag.options.type) {
+        case FlagType.String:
+          command
+            .addStringOption(option =>
+              option.setName(name)
+                .setDescription(description)
+                .setMaxLength(flag.options.maxLength)
+                .setMinLength(flag.options.minLength)
+                .setRequired(true)
+            );
+          break;
+        case FlagType.Number:
+          command
+            .addNumberOption(option =>
+              option.setName(name)
+                .setDescription(description)
+                .setMaxValue(flag.options.maxLength)
+                .setMinValue(flag.options.minLength)
+                .setRequired(true)
+            );
+          break;
+        case FlagType.Boolean:
+          command
+            .addBooleanOption(option =>
+              option.setName(name)
+                .setDescription(description)
+                .setRequired(true)
+            );
+          break;
+        // case FlagType.Choice:
+        //   command
+        //     .addStringOption(option =>
+        //       option.setName(name)
+        //         .setDescription(description)
+        //         .setRequired(true)
+        //         .addChoices(...flag.options?.choices.map(choice => ({ name: choice.name, value: choice.value.toString() })))
+        //     );
+        default:
+          break;
+      }
+    });
   }
 
   resolveCommands(command: CommandBuilder): void {
@@ -37,7 +95,8 @@ export class Client {
       if (!interaction.isCommand()) return;
       if (interaction.commandName === command.data.name) {
         try {
-          await command.execute(interaction);
+          const flags = command.flags.sort(this.sortFlags).map(flag => interaction.options.get(flag.name.toLowerCase()).value);
+          await command.execute(interaction, ...flags);
         } catch (error) {
           console.error(error);
           if (interaction.replied || interaction.deferred) {
@@ -50,26 +109,15 @@ export class Client {
     });
   }
 
-  // registerActionCommand(command: CommandMetadata): void {
-  //   const compiled = Resolver.resolve<Action>(command.target);
-  //   this.client.on('message', async (message: Message): Promise<void> => {
-  //     try {
-  //       const trigger = this.getCommandTrigger(command);
-  //       if (message.content.startsWith(trigger) && !this.checkForFlag(command.flags, trigger, message)) {
-  //         if (command.auth) await command.auth.authenticate(message);
-  //         const args = this.getCommandArgs(message, trigger);
-  //         await compiled.run(message, args);
-  //       }
-  //       if (command.flags.length > 0) {
-  //         await this.registerCommandFlags(command, message, trigger, compiled);
-  //       }
-  //     }
-  //     catch (ex) {
-  //       const error = ex as BaseError;
-  //       message.reply(`\`\`\` ${error.name.toLocaleUpperCase()} \n ${error.message}\`\`\``);
-  //     }
-  //   });
-  // }
+  private sortFlags(a: FlagMetadata, b: FlagMetadata) {
+    if (a.order < b.order) {
+      return -1;
+    } else if (a.order > b.order) {
+      return 1;
+    }
+    // a must be equal to b
+    return 0;
+  }
 
   registerListeners(listener: ListenerMetadata): void {
     const compiled = Resolver.resolve<Listener>(listener.target);
@@ -89,10 +137,6 @@ export class Client {
 
   start(): Promise<string> {
     return this.client.login(this.config.token);
-  }
-
-  private getCommandTrigger(command: CommandMetadata): string {
-    return `${command.prefix}${command.target.name.toLowerCase()}`;
   }
 
   private async registerCommandFlags(command: CommandMetadata, message: Message, trigger: string, compiled: any): Promise<void> {

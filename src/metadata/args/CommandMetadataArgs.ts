@@ -4,6 +4,5 @@ export interface CommandOptions {
 
 export interface CommandMetaDataArgs {
   target: Function;
-  prefix?: string;
   options: CommandOptions;
 }

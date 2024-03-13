@@ -23,7 +23,7 @@ export enum DiscordEvents {
   GuildUpdate = 'guildUpdate',
   inviteCreate = 'inviteCreate',
   InviteDelete = 'inviteDelete',
-  Message = 'message',
+  Message = 'messageCreate',
   MessageDelete = 'messageDelete',
   MessageReactionRemoveAll = 'MessageReactionRemoveAll',
   MessageReactionRemoveEmoji = 'MessageReactionRemoveEmoji',
