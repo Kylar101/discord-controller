@@ -53,7 +53,6 @@ export class MetadataBuilder {
     }
     return flagsWithTarget.map(args => {
       const flag = new FlagMetadata(args);
-      flag.auth = this.createFlagAuth(command, flag.name);
       return flag;
     });
   }

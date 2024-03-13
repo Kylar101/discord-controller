@@ -30,13 +30,12 @@ export class Client {
 
   registerActionCommand(command: CommandMetadata): CommandBuilder {
     const compiled = Resolver.resolve<Action>(command.target);
-    console.log('----- register action', compiled);
     const data = new SlashCommandBuilder()
       .setName(command.target.name.toLowerCase())
       .setDescription(command.options.description);
     if (command.subCommands.length === 0) this.registerFlags(data, command.flags);
-    if (command.subCommands.length > 0) this.registerDefaultSubCommand(data, command, command.flags);
-    this.registerSubCommands(data, command.subCommands);
+    if (command.subCommands.length > 0) this.registerDefaultSubCommand(data, command, command.flags.filter(f => f.method === 'default'));
+    this.registerSubCommands(data, command.subCommands, command.flags.filter(f => f.method !== 'default'));
     return {
       data,
       flags: command.flags,
@@ -107,16 +106,19 @@ export class Client {
       });
   }
 
-  private registerSubCommands(command: SlashCommandBuilder, subCommands: SubCommandMetadata[]): void {
+  private registerSubCommands(command: SlashCommandBuilder, subCommands: SubCommandMetadata[], flags: FlagMetadata[]): void {
     subCommands.forEach(subCommand => {
       const name = subCommand.name.toLowerCase();
       const description = subCommand.options.description;
+      const scFlags = flags.filter(flag => flag.method.toLowerCase() === name.toLowerCase());
       command
-        .addSubcommand(subCommandBuilder =>
-          subCommandBuilder
+        .addSubcommand(subCommandBuilder => {
+          const sc = subCommandBuilder
             .setName(name)
-            .setDescription(description)
-        );
+            .setDescription(description);
+          this.registerFlags(sc, scFlags);
+          return sc;
+        });
     });
   }
 
@@ -129,11 +131,12 @@ export class Client {
           if (command.subCommands.length) {
             const subCommand = interaction.options.getSubcommand();
             if (subCommand === 'default') {
-              const flags = command.flags.sort(this.sortFlags).map(flag => interaction.options.get(flag.name.toLowerCase()).value);
+              const flags = command.flags.filter(f => f.method === 'default').sort(this.sortFlags).map(flag => interaction.options.get(flag.name.toLowerCase()).value);
               await command.execute(interaction, ...flags);
             } else {
               const subCommandName = this.getSubcommandName(subCommand, command.subCommands);
-              await (command.compiled as any)[subCommandName](interaction);
+              const flags = command.flags.filter(f => f.method !== 'default').sort(this.sortFlags).map(flag => interaction.options.get(flag.name.toLowerCase()).value);
+              await (command.compiled as any)[subCommandName](interaction, ...flags);
             }
           } else {
             const flags = command.flags.sort(this.sortFlags).map(flag => interaction.options.get(flag.name.toLowerCase()).value);

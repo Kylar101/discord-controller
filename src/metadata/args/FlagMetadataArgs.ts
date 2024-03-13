@@ -21,6 +21,7 @@ export interface FlagOptions {
 export interface FlagMetadataArgs {
   target: Function;
   method: string;
+  name: string;
   options: FlagOptions;
   order: number;
 }
