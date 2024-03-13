@@ -1,5 +1,5 @@
-import { getMetadataStorage } from '../';
-import { FlagMetadataArgs } from './args';
+import { SubCommandMetadata, getMetadataStorage } from '../';
+import { FlagMetadataArgs, SubCommandMetaDataArgs } from './args';
 import { CommandMetadata } from './CommandMetadata';
 import { ListenerMetadata } from './ListenerMetadata';
 import { FlagMetadata } from './FlagMetadata';
@@ -26,6 +26,7 @@ export class MetadataBuilder {
     return commands.map(args => {
       const command = new CommandMetadata(args);
       command.flags = this.createFlags(command);
+      command.subCommands = this.createSubCommands(command);
       command.auth = this.createCommandAuth(command);
       return command;
     });
@@ -55,6 +56,20 @@ export class MetadataBuilder {
       flag.auth = this.createFlagAuth(command, flag.name);
       return flag;
     });
+  }
+
+  private createSubCommands(command: CommandMetadata): SubCommandMetadata[] {
+    let target = command.target;
+    const subCommandsWithTarget: SubCommandMetaDataArgs[] = [];
+    while (target) {
+      subCommandsWithTarget.push(
+        ...this.metadataStorage
+          .filterSubcommandsForTarget(target)
+          .filter(sc => subCommandsWithTarget.map(s => s.method).indexOf(sc.method) === -1)
+      );
+      target = Object.getPrototypeOf(target);
+    }
+    return subCommandsWithTarget.map(args => new SubCommandMetadata(args));
   }
 
   private createCommandAuth(command: CommandMetadata) {

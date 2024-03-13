@@ -3,9 +3,11 @@ import { ListenerMetadataArgs } from './args/ListenerMetadataArgs';
 import { FlagMetadataArgs } from './args/FlagMetadataArgs';
 import { ServiceMetadataArgs } from './args/ServiceMetadataArgs';
 import { AuthorizedMetadataArgs } from './args/AuthorizedMetadataArgs';
+import { SubCommandMetaDataArgs } from './args';
 
 export class MetadataStorage {
   commands: CommandMetaDataArgs[];
+  subCommands: SubCommandMetaDataArgs[];
   listeners: ListenerMetadataArgs[];
   services: ServiceMetadataArgs[];
   flags: FlagMetadataArgs[];
@@ -13,6 +15,7 @@ export class MetadataStorage {
 
   constructor() {
     this.commands = [];
+    this.subCommands = [];
     this.listeners = [];
     this.services = [];
     this.flags = [];
@@ -25,6 +28,10 @@ export class MetadataStorage {
 
   filterMetadataForListeners(classes: Function[]): ListenerMetadataArgs[] {
     return this.listeners.filter(listener => classes.filter(cls => listener.target === cls).length > 0);
+  }
+
+  filterSubcommandsForTarget(target: Function): SubCommandMetaDataArgs[] {
+    return this.subCommands.filter(subCommand => subCommand.target === target);
   }
 
   filterFlagsForTarget(target: Function): FlagMetadataArgs[] {

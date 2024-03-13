@@ -1,4 +1,4 @@
-import { Client as DiscordClient, Events, GatewayIntentBits, Message, SlashCommandBuilder, Interaction } from 'discord.js';
+import { Client as DiscordClient, Events, GatewayIntentBits, Message, SlashCommandBuilder, SlashCommandSubcommandBuilder, Interaction } from 'discord.js';
 import { CommandMetadata } from '../metadata/CommandMetadata';
 import { ListenerMetadata } from '../metadata/ListenerMetadata';
 import { BotOptions } from '../BotOptions';
@@ -7,7 +7,7 @@ import { FlagMetadata } from '../metadata/FlagMetadata';
 import { BaseError } from '../errors/BaseError';
 import { Listener, Action } from '../commands';
 import { CommandBuilder } from '../metadata/CommandBuilder';
-import { FlagType } from '../metadata';
+import { FlagType, SubCommandMetadata } from '../metadata';
 
 export class Client {
   private readonly config: BotOptions;
@@ -30,20 +30,25 @@ export class Client {
 
   registerActionCommand(command: CommandMetadata): CommandBuilder {
     const compiled = Resolver.resolve<Action>(command.target);
+    console.log('----- register action', compiled);
     const data = new SlashCommandBuilder()
       .setName(command.target.name.toLowerCase())
       .setDescription(command.options.description);
-    this.registerFlags(data, command.flags);
+    if (command.subCommands.length === 0) this.registerFlags(data, command.flags);
+    if (command.subCommands.length > 0) this.registerDefaultSubCommand(data, command, command.flags);
+    this.registerSubCommands(data, command.subCommands);
     return {
       data,
       flags: command.flags,
+      subCommands: command.subCommands,
       async execute(interaction: Interaction, ...flags: any[]) {
         await compiled.run(interaction, ...flags);
-      }
+      },
+      compiled
     };
   }
 
-  private registerFlags(command: SlashCommandBuilder, flags: FlagMetadata[]): void {
+  private registerFlags(command: SlashCommandBuilder | SlashCommandSubcommandBuilder, flags: FlagMetadata[]): void {
     flags.forEach(flag => {
       const name = flag.name.toLowerCase();
       const description = flag.options.description;
@@ -91,13 +96,49 @@ export class Client {
     });
   }
 
+  private registerDefaultSubCommand(builder: SlashCommandBuilder, command: CommandMetadata, flags: FlagMetadata[]): void {
+    builder
+      .addSubcommand(subCommandBuilder => {
+        const sc = subCommandBuilder
+          .setName('default')
+          .setDescription(command.options.description);
+        this.registerFlags(sc, flags);
+        return sc;
+      });
+  }
+
+  private registerSubCommands(command: SlashCommandBuilder, subCommands: SubCommandMetadata[]): void {
+    subCommands.forEach(subCommand => {
+      const name = subCommand.name.toLowerCase();
+      const description = subCommand.options.description;
+      command
+        .addSubcommand(subCommandBuilder =>
+          subCommandBuilder
+            .setName(name)
+            .setDescription(description)
+        );
+    });
+  }
+
   resolveCommands(command: CommandBuilder): void {
     this.client.on(Events.InteractionCreate, async (interaction: Interaction): Promise<void> => {
       if (!interaction.isCommand()) return;
+      if (!interaction.isChatInputCommand()) return;
       if (interaction.commandName === command.data.name) {
         try {
-          const flags = command.flags.sort(this.sortFlags).map(flag => interaction.options.get(flag.name.toLowerCase()).value);
-          await command.execute(interaction, ...flags);
+          if (command.subCommands.length) {
+            const subCommand = interaction.options.getSubcommand();
+            if (subCommand === 'default') {
+              const flags = command.flags.sort(this.sortFlags).map(flag => interaction.options.get(flag.name.toLowerCase()).value);
+              await command.execute(interaction, ...flags);
+            } else {
+              const subCommandName = this.getSubcommandName(subCommand, command.subCommands);
+              await (command.compiled as any)[subCommandName](interaction);
+            }
+          } else {
+            const flags = command.flags.sort(this.sortFlags).map(flag => interaction.options.get(flag.name.toLowerCase()).value);
+            await command.execute(interaction, ...flags);
+          }
         } catch (error) {
           console.error(error);
           if (interaction.replied || interaction.deferred) {
@@ -108,6 +149,10 @@ export class Client {
         }
       }
     });
+  }
+
+  private getSubcommandName(subCommand: string, commands: SubCommandMetadata[]): string {
+    return commands.find(command => command.name.toLowerCase() === subCommand).name;
   }
 
   private sortFlags(a: FlagMetadata, b: FlagMetadata) {
