@@ -76,14 +76,15 @@ export class Client {
                 .setRequired(true)
             );
           break;
-        // case FlagType.Choice:
-        //   command
-        //     .addStringOption(option =>
-        //       option.setName(name)
-        //         .setDescription(description)
-        //         .setRequired(true)
-        //         .addChoices(...flag.options?.choices.map(choice => ({ name: choice.name, value: choice.value.toString() })))
-        //     );
+        case FlagType.Choice:
+          command
+            .addStringOption(option =>
+              option.setName(name)
+                .setDescription(description)
+                .setRequired(true)
+                .addChoices(...flag.options?.choices.map(choice => ({ name: choice.name, value: choice.value.toString() })))
+            );
+          break;
         default:
           break;
       }
