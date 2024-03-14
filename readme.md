@@ -140,13 +140,13 @@ import { Command, Authorized, Action } from 'discord-controller';
 import { Message } from 'discord.js'
 
 @Authorized('AllowedRole')
-@Command()
+@Command({ description: 'description' })
 export class MyCommand extends Action {
   constructor() {
     super();
   }
 
-  run(message: Message) {
+  run(message: Interaction) {
     message.channel.send('This command can be used by members who have the `AllowedRole` role');
   }
 }
