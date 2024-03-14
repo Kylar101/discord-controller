@@ -1,5 +1,5 @@
 import { SubCommandMetadata, getMetadataStorage } from '../';
-import { FlagMetadataArgs, SubCommandMetaDataArgs } from './args';
+import { AuthorizedMetadataArgs, FlagMetadataArgs, SubCommandMetaDataArgs } from './args';
 import { CommandMetadata } from './CommandMetadata';
 import { ListenerMetadata } from './ListenerMetadata';
 import { FlagMetadata } from './FlagMetadata';
@@ -71,17 +71,17 @@ export class MetadataBuilder {
     return subCommandsWithTarget.map(args => new SubCommandMetadata(args));
   }
 
-  private createCommandAuth(command: CommandMetadata) {
-    const target = command.target;
-    const auth = this.metadataStorage.filterAuthForCommand(target);
-    if (!auth) return;
-    return new AuthMetadata(auth);
-  }
-
-  private createFlagAuth(command: CommandMetadata, method: string) {
-    const target = command.target;
-    const auth = this.metadataStorage.filterAuthForFlag(target, method);
-    if (!auth) return;
-    return new AuthMetadata(auth);
+  private createCommandAuth(command: CommandMetadata): AuthMetadata[] {
+    let target = command.target;
+    const authWithTarget: AuthorizedMetadataArgs[] = [];
+    while (target) {
+      authWithTarget.push(
+        ...this.metadataStorage
+          .filterAuthForCommand(target)
+          .filter(auth => authWithTarget.map(a => a.method).indexOf(auth.method) === -1)
+      );
+      target = Object.getPrototypeOf(target);
+    }
+    return authWithTarget.map(args => new AuthMetadata(args));
   }
 }

@@ -1,14 +1,12 @@
-import { Message } from 'discord.js';
-import { Action } from '../../src/commands';
-import { Command } from '../../src/decorator';
+import { Action, Command, Interaction } from 'discord-controller';
 
-@Command()
+@Command({ description: 'This is the description' })
 export class Test extends Action {
   constructor() {
     super();
   }
 
-  async run(message: Message) {
-    message.channel.send('sending a message');
+  async run(message: Interaction) {
+    await message.reply('Hello world');
   }
 }

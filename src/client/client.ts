@@ -8,6 +8,7 @@ import { BaseError } from '../errors/BaseError';
 import { Listener, Action } from '../commands';
 import { CommandBuilder } from '../metadata/CommandBuilder';
 import { FlagType, SubCommandMetadata } from '../metadata';
+import { UnauthorizedError } from '../errors/Unauthorized';
 
 export class Client {
   private readonly config: BotOptions;
@@ -40,6 +41,7 @@ export class Client {
       data,
       flags: command.flags,
       subCommands: command.subCommands,
+      authentication: command.auth,
       async execute(interaction: Interaction, ...flags: any[]) {
         await compiled.run(interaction, ...flags);
       },
@@ -131,19 +133,29 @@ export class Client {
           if (command.subCommands.length) {
             const subCommand = interaction.options.getSubcommand();
             if (subCommand === 'default') {
+              const auth = command.authentication.find(auth => !auth.subCommand);
+              if (auth) await auth.authenticate(interaction);
               const flags = command.flags.filter(f => f.method === 'default').sort(this.sortFlags).map(flag => interaction.options.get(flag.name.toLowerCase()).value);
               await command.execute(interaction, ...flags);
             } else {
+              const auth = command.authentication.find(auth => auth.subCommand.toLowerCase() === subCommand);
+              if (auth) await auth.authenticate(interaction);
               const subCommandName = this.getSubcommandName(subCommand, command.subCommands);
               const flags = command.flags.filter(f => f.method !== 'default').sort(this.sortFlags).map(flag => interaction.options.get(flag.name.toLowerCase()).value);
               await (command.compiled as any)[subCommandName](interaction, ...flags);
             }
           } else {
+            const auth = command.authentication.find(auth => !auth.subCommand);
+            if (auth) await auth.authenticate(interaction);
             const flags = command.flags.sort(this.sortFlags).map(flag => interaction.options.get(flag.name.toLowerCase()).value);
             await command.execute(interaction, ...flags);
           }
         } catch (error) {
           console.error(error);
+          if (error instanceof UnauthorizedError) {
+            await interaction.reply({ content: error.message, ephemeral: true });
+            return;
+          }
           if (interaction.replied || interaction.deferred) {
             await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
           } else {
@@ -188,18 +200,18 @@ export class Client {
     return this.client.login(this.config.token);
   }
 
-  private async registerCommandFlags(command: CommandMetadata, message: Message, trigger: string, compiled: any): Promise<void> {
-    for (let i = 0; i < command.flags.length; i++) {
-      const flag = command.flags[i];
-      const flagTrigger = this.getFlagTrigger(trigger, flag);
-      if (message.content.startsWith(flagTrigger)) {
-        if (command.auth) await command.auth.authenticate(message);
-        else if (flag.auth) await flag.auth.authenticate(message);
-        const args = this.getCommandArgs(message, flagTrigger);
-        await compiled[flag.name](message, args);
-      }
-    }
-  }
+  // private async registerCommandFlags(command: CommandMetadata, message: Message, trigger: string, compiled: any): Promise<void> {
+  // for (let i = 0; i < command.flags.length; i++) {
+  // const flag = command.flags[i];
+  // const flagTrigger = this.getFlagTrigger(trigger, flag);
+  // if (message.content.startsWith(flagTrigger)) {
+  // if (command.auth) await command.auth.authenticate(message);
+  // else if (flag.auth) await flag.auth.authenticate(message);
+  // const args = this.getCommandArgs(message, flagTrigger);
+  // await compiled[flag.name](message, args);
+  // }
+  // }
+  // }
 
   private getCommandArgs(message: Message, trigger: string) {
     return message.content.slice(trigger.length).trim().split(' ');

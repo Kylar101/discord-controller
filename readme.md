@@ -29,18 +29,17 @@
 2. Create a file `MyCommand.ts`
 
     ```typescript
-    import { Command, Action } from 'discord-controller';
-    import { Message } from 'discord.js';
+    import { Action, Command, Interaction } from 'discord-controller';
 
-    @Command()
+    @Command({ description: 'This is the description' })
     export class MyCommand extends Action {
-        constructor() {
-            super();
-        }
-
-        run(message: Message) {
-            message.channel.send('This command will reply to the user');
-        }
+      constructor() {
+        super();
+      }
+    
+      async run(message: Interaction) {
+        await message.reply('This command will reply to the user');
+      }
     }
     ```
 
@@ -48,80 +47,70 @@
 
 3. Create a file `bot.ts`
     ```typescript
-    import 'reflect-metadata';
     import { createServer } from 'discord-controller';
     import { MyCommand } from './MyCommand';
+    
+    (async () => {
+      try {
+        const bot = await createServer({
+          permissions: [],
+          token: 'TOKEN',
+          guildId: 'GUILD_ID',
+          clientId: 'CLIENT_ID',
+          commands: [
+            MyCommand,
+          ],
+        });
+        bot.start();
+      } catch (e) {
+        console.log('Unable to start bot');
+      }
+    })();
 
-    // creates the bot and registers all commands
-    const bot = createServer({
-        token: 'YOUR_AUTH_TOKEN',
-        commands: [MyCommand] // specify which commands you want to use
-    });
-
-    // starts the bot
-    bot.start();
     ```
 
-4. Run your bot and type `!mycommand` in your discord server. The bot will respond with `"This command will reply to the user"`
+4. Run your bot and type `/mycommand` in your discord server. The bot will respond with `"This command will reply to the user"`
 
 ## More Examples
 
-### Custom Command Prefixes
+### Sub Commands
 
-You can change the command prefix from the default `!` by passing it into the command decorator
+If you are designing a command that has options, you can use `@SubCommand` in addition to `@Command` to add flags to your command.
 
 ```typescript
-import { Command, Action } from 'discord-controller';
-import { Message } from 'discord.js';
+import { Action, Command, Interaction, SubCommand, Flag, FlagType } from 'discord-controller';
 
-@Command('&')
-export class MyCommand extends Action {
-    constructor() {
-        super();
-    }
+@Command({ description: 'This is the description' })
+export class Test extends Action {
+  constructor() {
+    super();
+  }
 
-    run(message: Message) {
-        message.channel.send('This command will reply to the user');
-    }
+  async run(
+    message: Interaction
+  ): Promise<void> {
+    await message.reply('This will be send from the base command');
+  }
+
+  @SubCommand({ description: 'This is the description' })
+  async subCommand(
+    interaction: Interaction
+  ) {
+    await interaction.reply('This will be sent from the subcommand');
+  }
 }
 ```
 
-This will make the command respond to `&mycommand`
+This will create 2 commands for `MyCommand`, a `default` command and a `subCommand` command. Accesable like `/mycommand default` and `/mycommand subcommand`
 
-### Command Flags
-
-If you are designing a command that has options, you can use `@Flag` in addition to `@Command` to add flags to your command.
-
-```typescript
-import { Command, Flag, Action } from 'discord-controller';
-import { Message } from 'discord.js';
-
-@Command()
-export class MyCommand extends Action {
-    constructor() {
-        super();
-    }
-
-    run(message: Message) {
-        message.channel.send('This will be sent from the base command');
-    }
-
-    @Flag()
-    myFlag(message: Message) {
-        message.channel.send('This will be sent from the flag');
-    }
-}
-```
-
-`!mycommand` will respond with `"This will be sent from the base command"` and `!mycommand myflag` will respond with `"This will be sent from the flag"`
+`/mycommand default` will respond with `"This will be sent from the base command"` and `/mycommand subcommand` will respond with `"This will be sent from the subcommand"`
 
 ### Dependency Injection
 
 `discord-controller` has inbuilt dependency injection that will work automatically when using the `@Service` decorator
 
 ```typescript
-import { Command, Service, Action } from 'discord-controller';
-import { Message } from 'discord.js';
+import { Command, Interaction, Service, Action } from 'discord-controller';
 
 @Service()
 export class MyService {
@@ -130,13 +119,13 @@ export class MyService {
     }
 }
 
-@Command()
+@Command({ description: 'description' })
 export class MyCommand extends Action {
     constructor(private service: MyService) {
         super();
     }
 
-    run(message: Message) {
+    run(message: Interaction) {
         message.channel.send(this.service.myFunction());
     }
 }
@@ -168,22 +157,23 @@ export class MyCommand extends Action {
 If you are to monitor for a certain action being performed, you can use `@Listen` and pass in the event that you wish to monitor
 
 ```typescript
-import { Listen, DiscordEvents, Listener } from 'discord-controller';
-import { ClientEvents } from 'discord.js';
+import { ClientEvents, Events } from 'discord.js';
+import { Listen, Listener, DiscordEvents } from 'discord-controller';
 
-@Listen(DiscordEvents.Message)
-export class MyListener implements Listener<DiscordEvents.Message> {
-
-  listen(parameters: ClientEvents[DiscordEvents.Message]) {
-    const [ message ] = parameters;
+@Listen(Events.MessageCreate)
+export class TestListener implements Listener<DiscordEvents.Message> {
+  async listen(parameters: ClientEvents[Events.MessageCreate]) {
+    const [message] = parameters;
     return message.content.includes('hello');
   }
 
-  run(parameters: ClientEvents[DiscordEvents.Message]) {
-    const [ message ] = parameters;
+  run(parameters: ClientEvents[Events.MessageCreate]) {
+    const [message] = parameters;
     message.channel.send('someone sent a greeting');
   }
 }
 ```
+
+> NOTE: If you find that the listener is not working, check that you have added the required permissions during start up
 
 To view supported events visit the [discord.js documentation](https://discord.js.org/#/docs/main/stable/class/Client?scrollTo=e-channelCreate)

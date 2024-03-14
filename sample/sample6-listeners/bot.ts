@@ -1,9 +1,19 @@
-import { createServer } from '../../src/index';
+import { createServer } from 'discord-controller';
 import { Test } from './Test';
 
-const bot = createServer({
-  token: 'YOUR_AUTH_TOKEN',
-  listeners: [Test]
-});
-
-bot.start();
+(async () => {
+  try {
+    const bot = await createServer({
+      permissions: [],
+      token: 'TOKEN',
+      guildId: 'GUILD_ID',
+      clientId: 'CLIENT_ID',
+      listeners: [
+        Test,
+      ],
+    });
+    bot.start();
+  } catch (e) {
+    console.log('Unable to start bot');
+  }
+})();

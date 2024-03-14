@@ -9,7 +9,7 @@ export class CommandMetadata {
   options: any;
   flags: FlagMetadata[];
   subCommands: SubCommandMetadata[];
-  auth: AuthMetadata;
+  auth: AuthMetadata[];
 
   constructor(args: CommandMetaDataArgs) {
     this.target = args.target;

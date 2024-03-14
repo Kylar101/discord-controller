@@ -38,11 +38,11 @@ export class MetadataStorage {
     return this.flags.filter(flag => flag.target === target);
   }
 
-  filterAuthForCommand(target: Function): AuthorizedMetadataArgs {
-    return this.authorized.find(auth => auth.target === target && !auth.method);
+  filterAuthForCommand(target: Function): AuthorizedMetadataArgs[] {
+    return this.authorized.filter(auth => auth.target === target);
   }
 
-  filterAuthForFlag(target: Function, method: string): AuthorizedMetadataArgs {
-    return this.authorized.find(auth => auth.target === target && auth.method === method);
+  filterAuthForFlag(target: Function, method: string): AuthorizedMetadataArgs[] {
+    return this.authorized.filter(auth => auth.target === target && auth.method === method);
   }
 }
