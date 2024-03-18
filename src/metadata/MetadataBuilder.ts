@@ -1,9 +1,13 @@
 import { SubCommandMetadata, getMetadataStorage } from '../';
-import { AuthorizedMetadataArgs, FlagMetadataArgs, SubCommandMetaDataArgs } from './args';
+import type {
+  AuthorizedMetadataArgs,
+  FlagMetadataArgs,
+  SubCommandMetaDataArgs,
+} from './args';
 import { CommandMetadata } from './CommandMetadata';
 import { ListenerMetadata } from './ListenerMetadata';
 import { FlagMetadata } from './FlagMetadata';
-import { MetadataStorage } from './MetadataStorage';
+import type { MetadataStorage } from './MetadataStorage';
 import { AuthMetadata } from './AuthMetadata';
 
 export class MetadataBuilder {
@@ -22,8 +26,10 @@ export class MetadataBuilder {
   }
 
   private createCommands(classes?: Function[]): CommandMetadata[] {
-    const commands = classes ? this.metadataStorage.filterMetadataForCommands(classes) : this.metadataStorage.commands;
-    return commands.map(args => {
+    const commands = classes
+      ? this.metadataStorage.filterMetadataForCommands(classes)
+      : this.metadataStorage.commands;
+    return commands.map((args) => {
       const command = new CommandMetadata(args);
       command.flags = this.createFlags(command);
       command.subCommands = this.createSubCommands(command);
@@ -33,8 +39,10 @@ export class MetadataBuilder {
   }
 
   private createListeners(classes?: Function[]): ListenerMetadata[] {
-    const listeners = classes ? this.metadataStorage.filterMetadataForListeners(classes) : this.metadataStorage.listeners;
-    return listeners.map(args => {
+    const listeners = classes
+      ? this.metadataStorage.filterMetadataForListeners(classes)
+      : this.metadataStorage.listeners;
+    return listeners.map((args) => {
       const listener = new ListenerMetadata(args);
       return listener;
     });
@@ -47,11 +55,14 @@ export class MetadataBuilder {
       flagsWithTarget.push(
         ...this.metadataStorage
           .filterFlagsForTarget(target)
-          .filter(flag => flagsWithTarget.map(f => f.method).indexOf(flag.method) === -1)
+          .filter(
+            (flag) =>
+              flagsWithTarget.map((f) => f.method).indexOf(flag.method) === -1,
+          ),
       );
       target = Object.getPrototypeOf(target);
     }
-    return flagsWithTarget.map(args => {
+    return flagsWithTarget.map((args) => {
       const flag = new FlagMetadata(args);
       return flag;
     });
@@ -64,11 +75,15 @@ export class MetadataBuilder {
       subCommandsWithTarget.push(
         ...this.metadataStorage
           .filterSubcommandsForTarget(target)
-          .filter(sc => subCommandsWithTarget.map(s => s.method).indexOf(sc.method) === -1)
+          .filter(
+            (sc) =>
+              subCommandsWithTarget.map((s) => s.method).indexOf(sc.method) ===
+              -1,
+          ),
       );
       target = Object.getPrototypeOf(target);
     }
-    return subCommandsWithTarget.map(args => new SubCommandMetadata(args));
+    return subCommandsWithTarget.map((args) => new SubCommandMetadata(args));
   }
 
   private createCommandAuth(command: CommandMetadata): AuthMetadata[] {
@@ -78,10 +93,13 @@ export class MetadataBuilder {
       authWithTarget.push(
         ...this.metadataStorage
           .filterAuthForCommand(target)
-          .filter(auth => authWithTarget.map(a => a.method).indexOf(auth.method) === -1)
+          .filter(
+            (auth) =>
+              authWithTarget.map((a) => a.method).indexOf(auth.method) === -1,
+          ),
       );
       target = Object.getPrototypeOf(target);
     }
-    return authWithTarget.map(args => new AuthMetadata(args));
+    return authWithTarget.map((args) => new AuthMetadata(args));
   }
 }

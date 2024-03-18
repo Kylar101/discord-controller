@@ -1,4 +1,4 @@
-import { ClientEvents } from 'discord.js';
+import type { ClientEvents } from 'discord.js';
 
 export interface Listener<K extends keyof ClientEvents = 'messageCreate'> {
   listen(parameters: ClientEvents[K]): boolean | Promise<boolean>;

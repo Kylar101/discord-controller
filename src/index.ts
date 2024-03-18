@@ -1,6 +1,6 @@
 import { Client } from './client/client';
 import { CommandController } from './CommandController';
-import { BotOptions } from './BotOptions';
+import type { BotOptions } from './BotOptions';
 import { MetadataStorage } from './metadata/MetadataStorage';
 import { importClassesFromDirectories } from './utils/importClassesFromDirectories';
 
@@ -25,25 +25,42 @@ export async function createServer(options: BotOptions): Promise<Client> {
   return managerServer(client, options);
 }
 
-async function managerServer(client: Client, options: BotOptions): Promise<Client> {
+async function managerServer(
+  client: Client,
+  options: BotOptions,
+): Promise<Client> {
   createExecutor(client, options);
   return client;
 }
 
 async function createExecutor(client: Client, options: BotOptions) {
   let commandClasses: Function[] = [];
-  if (options && options.commands && options.commands.length) {
-    commandClasses = (options.commands as any[]).filter(command => command instanceof Function);
-    const commandDirs = (options.commands as any[]).filter(command => typeof command === 'string');
+  if (options?.commands?.length) {
+    commandClasses = (options.commands as any[]).filter(
+      (command) => command instanceof Function,
+    );
+    const commandDirs = (options.commands as any[]).filter(
+      (command) => typeof command === 'string',
+    );
     commandClasses.push(...importClassesFromDirectories(commandDirs));
   }
 
   let listenerClasses: Function[] = [];
-  if (options && options.listeners && options.listeners.length) {
-    listenerClasses = (options.listeners as any[]).filter(listener => listener instanceof Function);
-    const listenerDirs = (options.listeners as any[]).filter(listener => typeof listener === 'string');
+  if (options?.listeners?.length) {
+    listenerClasses = (options.listeners as any[]).filter(
+      (listener) => listener instanceof Function,
+    );
+    const listenerDirs = (options.listeners as any[]).filter(
+      (listener) => typeof listener === 'string',
+    );
     listenerClasses.push(...importClassesFromDirectories(listenerDirs));
   }
 
-  (await new CommandController(client, options).registerCommands(commandClasses)).resolveCommands().registerListeners(listenerClasses);
+  (
+    await new CommandController(client, options).registerCommands(
+      commandClasses,
+    )
+  )
+    .resolveCommands()
+    .registerListeners(listenerClasses);
 }

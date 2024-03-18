@@ -1,10 +1,9 @@
-import { CommandMetaDataArgs } from './args/CommandMetadataArgs';
-import { FlagMetadata } from './FlagMetadata';
-import { AuthMetadata } from './AuthMetadata';
-import { SubCommandMetadata } from './SubCommandMetadata';
+import type { CommandMetaDataArgs } from './args/CommandMetadataArgs';
+import type { FlagMetadata } from './FlagMetadata';
+import type { AuthMetadata } from './AuthMetadata';
+import type { SubCommandMetadata } from './SubCommandMetadata';
 
 export class CommandMetadata {
-
   target: Function;
   options: any;
   flags: FlagMetadata[];

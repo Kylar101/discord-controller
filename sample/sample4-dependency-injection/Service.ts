@@ -1,4 +1,4 @@
-import { Service } from 'discord-controller';
+import { Service } from "discord-controller";
 
 @Service()
 export class MyService {

@@ -1,6 +1,6 @@
 {
   "name": "discord-controller",
-  "version": "0.9.3",
+  "version": "1.0.0",
   "description": "A wrapper around discord.js for easily creating discord bots with dependency injection",
   "main": "dist/index.js",
   "scripts": {
@@ -10,8 +10,10 @@
     "package": "npm run build && npm run pack",
     "clean": "rm -rf build && rm -rf dist",
     "test": "echo 'No tests created'",
-    "lint": "eslint src/**/*.ts",
-    "lint:fix": "eslint src/**/*.ts --fix"
+    "lint": "npx @biomejs/biome lint ./src",
+    "lint:fix": "npx @biomejs/biome lint --apply ./src",
+    "format": "npx @biomejs/biome format ./src",
+    "format:fix": "npx @biomejs/biome format --write ./src"
   },
   "keywords": [
     "bot",
@@ -30,12 +32,11 @@
     "discord.js": "^14.14.1"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.6.1",
     "@types/node": "^20.11.25",
     "@types/ws": "^8.5.10",
-    "@typescript-eslint/eslint-plugin": "^7.1.1",
     "@typescript-eslint/parser": "^7.1.1",
     "discord.js": "^14.14.1",
-    "eslint": "^8.57.0",
     "nodemon": "^3.1.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.2"

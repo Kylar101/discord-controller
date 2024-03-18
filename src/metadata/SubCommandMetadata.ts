@@ -1,8 +1,7 @@
-import { SubCommandMetaDataArgs, SubCommandOptions } from './args';
-import { AuthMetadata } from './AuthMetadata';
+import type { SubCommandMetaDataArgs, SubCommandOptions } from './args';
+import type { AuthMetadata } from './AuthMetadata';
 
 export class SubCommandMetadata {
-
   target: Function;
   name: string;
   options: SubCommandOptions;

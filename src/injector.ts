@@ -10,7 +10,7 @@ export class Injector {
   }
 
   command(target: any) {
-    if (this.depInstances && this.depInstances.has(target.name)) {
+    if (this.depInstances?.has(target.name)) {
       return this.depInstances.get(target.name);
     }
 

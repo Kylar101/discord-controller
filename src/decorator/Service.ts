@@ -1,11 +1,11 @@
 import { getMetadataStorage } from '../';
-import { ServiceMetadataArgs } from '../metadata/args/ServiceMetadataArgs';
+import type { ServiceMetadataArgs } from '../metadata/args/ServiceMetadataArgs';
 
 export function Service(options?: ServiceMetadataArgs) {
-  return function(target: Function): void {
+  return (target: Function): void => {
     getMetadataStorage().services.push({
       target,
-      options
+      options,
     });
   };
 }

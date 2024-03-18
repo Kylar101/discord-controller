@@ -44,5 +44,5 @@ export enum DiscordEvents {
   ShardError = 'shardError',
   ShardReady = 'shardReady',
   ShardReconnecting = 'shardReconnecting',
-  ShardResume = 'shardResume'
+  ShardResume = 'shardResume',
 }

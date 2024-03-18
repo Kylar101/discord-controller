@@ -8,7 +8,7 @@ export enum FlagType {
 export type FlagChoice = {
   name: string;
   value: string | number;
-}
+};
 
 export interface FlagOptions {
   description: string;

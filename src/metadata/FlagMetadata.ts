@@ -1,8 +1,7 @@
-import { FlagMetadataArgs, FlagOptions } from './args';
-import { AuthMetadata } from './AuthMetadata';
+import type { FlagMetadataArgs, FlagOptions } from './args';
+import type { AuthMetadata } from './AuthMetadata';
 
 export class FlagMetadata {
-
   target: Function;
   name: string;
   method: string;

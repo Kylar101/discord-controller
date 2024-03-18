@@ -1,4 +1,4 @@
-import { GatewayIntentBits } from 'discord.js';
+import type { GatewayIntentBits } from 'discord.js';
 
 export interface BotOptions {
   permissions: GatewayIntentBits[];
