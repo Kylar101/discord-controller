@@ -13,5 +13,8 @@ export class CommandMetadata {
   constructor(args: CommandMetaDataArgs) {
     this.target = args.target;
     this.options = args.options;
+    this.flags = [];
+    this.subCommands = [];
+    this.auth = [];
   }
 }

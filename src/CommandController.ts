@@ -24,13 +24,13 @@ export class CommandController {
     const rest = new REST().setToken(this.options.token);
     try {
       console.log(`Registering ${data.length} commands`);
-      const registered: any = await rest.put(
+      const registered = (await rest.put(
         Routes.applicationGuildCommands(
           this.options.clientId,
           this.options.guildId,
         ),
         { body: data },
-      );
+      )) as Record<string, string>[];
       console.log(`Successfully registered ${registered.length} commands`);
     } catch (err) {
       console.log('unable to register commands', JSON.stringify(err, null, 2));

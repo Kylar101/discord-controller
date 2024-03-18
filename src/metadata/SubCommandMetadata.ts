@@ -5,7 +5,7 @@ export class SubCommandMetadata {
   target: Function;
   name: string;
   options: SubCommandOptions;
-  auth: AuthMetadata;
+  auth: AuthMetadata|undefined;
 
   constructor(args: SubCommandMetaDataArgs) {
     this.target = args.target;

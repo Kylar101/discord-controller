@@ -20,7 +20,7 @@ export class AuthMetadata {
   async authenticate(message: Interaction): Promise<boolean> {
     const author = message.member;
     const roles: GuildMemberRoleManager =
-      author.roles as GuildMemberRoleManager;
+      author?.roles as GuildMemberRoleManager;
     let isAuthorised = false;
     switch (typeof this.method) {
       case 'string':

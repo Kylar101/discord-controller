@@ -7,7 +7,7 @@ export class FlagMetadata {
   method: string;
   options: FlagOptions;
   order: number;
-  auth: AuthMetadata;
+  auth: AuthMetadata|undefined;
 
   constructor(args: FlagMetadataArgs) {
     this.target = args.target;

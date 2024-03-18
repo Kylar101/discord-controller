@@ -13,11 +13,14 @@ export * from './commands';
 export * from './utils';
 export * from './types';
 
-export function getMetadataStorage(): MetadataStorage {
-  if (!(global as any).metaDataStorage)
-    (global as any).metaDataStorage = new MetadataStorage();
+declare global {
+  var metaDataStorage: MetadataStorage;
+}
 
-  return (global as any).metaDataStorage;
+export function getMetadataStorage(): MetadataStorage {
+  if (!global.metaDataStorage) global.metaDataStorage = new MetadataStorage();
+
+  return global.metaDataStorage;
 }
 
 export async function createServer(options: BotOptions): Promise<Client> {
@@ -36,23 +39,23 @@ async function managerServer(
 async function createExecutor(client: Client, options: BotOptions) {
   let commandClasses: Function[] = [];
   if (options?.commands?.length) {
-    commandClasses = (options.commands as any[]).filter(
+    commandClasses = options.commands.filter(
       (command) => command instanceof Function,
-    );
-    const commandDirs = (options.commands as any[]).filter(
+    ) as Function[];
+    const commandDirs = options.commands.filter(
       (command) => typeof command === 'string',
-    );
+    ) as string[];
     commandClasses.push(...importClassesFromDirectories(commandDirs));
   }
 
   let listenerClasses: Function[] = [];
   if (options?.listeners?.length) {
-    listenerClasses = (options.listeners as any[]).filter(
+    listenerClasses = options.listeners.filter(
       (listener) => listener instanceof Function,
-    );
-    const listenerDirs = (options.listeners as any[]).filter(
+    ) as Function[];
+    const listenerDirs = options.listeners.filter(
       (listener) => typeof listener === 'string',
-    );
+    ) as string[];
     listenerClasses.push(...importClassesFromDirectories(listenerDirs));
   }
 

@@ -81,8 +81,8 @@ export class Client {
             option
               .setName(name)
               .setDescription(description)
-              .setMaxLength(flag.options.maxLength)
-              .setMinLength(flag.options.minLength)
+              .setMaxLength(flag.options.maxLength!)
+              .setMinLength(flag.options.minLength!)
               .setRequired(true),
           );
           break;
@@ -91,8 +91,8 @@ export class Client {
             option
               .setName(name)
               .setDescription(description)
-              .setMaxValue(flag.options.maxLength)
-              .setMinValue(flag.options.minLength)
+              .setMaxValue(flag.options.maxLength!)
+              .setMinValue(flag.options.minLength!)
               .setRequired(true),
           );
           break;
@@ -108,10 +108,10 @@ export class Client {
               .setDescription(description)
               .setRequired(true)
               .addChoices(
-                ...flag.options?.choices.map((choice) => ({
+                ...flag.options?.choices?.map((choice) => ({
                   name: choice.name,
                   value: choice.value.toString(),
-                })),
+                })) || [],
               ),
           );
           break;
@@ -174,12 +174,12 @@ export class Client {
                   .sort(this.sortFlags)
                   .map(
                     (flag) =>
-                      interaction.options.get(flag.name.toLowerCase()).value,
+                      interaction.options.get(flag.name.toLowerCase())!.value,
                   );
                 await command.execute(interaction, ...flags);
               } else {
                 const auth = command.authentication.find(
-                  (auth) => auth.subCommand.toLowerCase() === subCommand,
+                  (auth) => auth.subCommand!.toLowerCase() === subCommand,
                 );
                 if (auth) await auth.authenticate(interaction);
                 const subCommandName = this.getSubcommandName(
@@ -191,7 +191,7 @@ export class Client {
                   .sort(this.sortFlags)
                   .map(
                     (flag) =>
-                      interaction.options.get(flag.name.toLowerCase()).value,
+                      interaction.options.get(flag.name.toLowerCase())!.value,
                   );
                 await (command.compiled as any)[subCommandName](
                   interaction,
@@ -207,7 +207,7 @@ export class Client {
                 .sort(this.sortFlags)
                 .map(
                   (flag) =>
-                    interaction.options.get(flag.name.toLowerCase()).value,
+                    interaction.options.get(flag.name.toLowerCase())!.value,
                 );
               await command.execute(interaction, ...flags);
             }
@@ -241,7 +241,7 @@ export class Client {
     subCommand: string,
     commands: SubCommandMetadata[],
   ): string {
-    return commands.find((command) => command.name.toLowerCase() === subCommand)
+    return commands.find((command) => command.name.toLowerCase() === subCommand)!
       .name;
   }
 
