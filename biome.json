@@ -36,6 +36,9 @@
 		]
 	},
 	"javascript": {
+		"parser": {
+			"unsafeParameterDecoratorsEnabled": false
+		},
 		"formatter": {
 			"quoteStyle": "single"
 		}
