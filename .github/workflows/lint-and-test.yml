@@ -3,11 +3,13 @@ name: Lint and Test
 on:
   push:
     branches:
+      - feat/*
       - feature/*
       - bugfix/*
       - develop
   pull_request:
     branches:
+      - feat/*
       - feature/*
       - bugfix/*
       - develop
