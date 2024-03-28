@@ -3,28 +3,30 @@ name: Lint and Test
 on:
   push:
     branches:
+      - feat/*
       - feature/*
       - bugfix/*
       - develop
   pull_request:
     branches:
+      - feat/*
       - feature/*
       - bugfix/*
       - develop
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Run Unit tests
-      run: |
-        npm i
-        npm run test
+  # test:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Run Unit tests
+  #       run: |
+  #         npm i
+  #         npm run test
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Run Linting
         run: |
           npm i

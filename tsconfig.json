@@ -1,21 +1,19 @@
 {
   "compilerOptions": {
-    "outDir": "./build",
-    "lib": [
-      "es6",
-      "ESNext.AsyncIterable"
-    ],
-    "target": "es6",
+    "target": "es2016",
     "module": "commonjs",
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
     "sourceMap": true,
-    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "baseUrl": "./src",
+    "outDir": "./dist",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "declaration": true
   },
-  "exclude": [
-    "build",
-    "node_modules"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "**/*.test.ts", "build"],
+  "ignore": ["node_modules", "sample"]
 }

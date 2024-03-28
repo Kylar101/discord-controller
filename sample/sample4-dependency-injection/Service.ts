@@ -1,4 +1,4 @@
-import { Service } from '../../src/decorator';
+import { Service } from "discord-controller";
 
 @Service()
 export class MyService {

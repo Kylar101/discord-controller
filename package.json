@@ -1,6 +1,6 @@
 {
   "name": "discord-controller",
-  "version": "0.9.3",
+  "version": "1.0.0",
   "description": "A wrapper around discord.js for easily creating discord bots with dependency injection",
   "main": "dist/index.js",
   "scripts": {
@@ -10,8 +10,10 @@
     "package": "npm run build && npm run pack",
     "clean": "rm -rf build && rm -rf dist",
     "test": "echo 'No tests created'",
-    "lint": "eslint src/**/*.ts",
-    "lint:fix": "eslint src/**/*.ts --fix"
+    "lint": "npx @biomejs/biome lint ./src",
+    "lint:fix": "npx @biomejs/biome lint --apply ./src",
+    "format": "npx @biomejs/biome format ./src",
+    "format:fix": "npx @biomejs/biome format --write ./src"
   },
   "keywords": [
     "bot",
@@ -24,20 +26,18 @@
   "author": "Kylar101",
   "license": "ISC",
   "dependencies": {
-    "reflect-metadata": "^0.1.13"
+    "reflect-metadata": "^0.2.1"
   },
   "peerDependencies": {
-    "discord.js": "^12.2.0"
+    "discord.js": "^14.14.1"
   },
   "devDependencies": {
-    "@types/node": "^14.0.14",
-    "@types/ws": "^7.2.7",
-    "@typescript-eslint/eslint-plugin": "^3.5.0",
-    "@typescript-eslint/parser": "^3.5.0",
-    "discord.js": "^12.2.0",
-    "eslint": "^7.4.0",
-    "nodemon": "^2.0.4",
-    "ts-node": "^8.10.2",
-    "typescript": "^3.9.6"
+    "@biomejs/biome": "1.6.1",
+    "@types/node": "^20.11.25",
+    "@types/ws": "^8.5.10",
+    "discord.js": "^14.14.1",
+    "nodemon": "^3.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.2"
   }
 }

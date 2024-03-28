@@ -1,11 +1,11 @@
 import { getMetadataStorage } from '../';
+import type { CommandOptions } from '../metadata';
 
-export function Command(prefix?: string, options?: any): Function {
-  return function (object: Function) {
+export function Command(options: CommandOptions): Function {
+  return (object: Function) => {
     getMetadataStorage().commands.push({
       target: object,
-      prefix,
-      options
+      options,
     });
   };
 }

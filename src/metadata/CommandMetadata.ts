@@ -1,19 +1,20 @@
-import { CommandMetaDataArgs } from './args/CommandMetadataArgs';
-import { FlagMetadata } from './FlagMetadata';
-import { AuthMetadata } from './AuthMetadata';
-import { DEFAULT_PREFIX } from '../contants';
+import type { CommandMetaDataArgs } from './args/CommandMetadataArgs';
+import type { FlagMetadata } from './FlagMetadata';
+import type { AuthMetadata } from './AuthMetadata';
+import type { SubCommandMetadata } from './SubCommandMetadata';
 
 export class CommandMetadata {
-
   target: Function;
-  prefix: string;
-  options: any
+  options: any;
   flags: FlagMetadata[];
-  auth: AuthMetadata;
+  subCommands: SubCommandMetadata[];
+  auth: AuthMetadata[];
 
   constructor(args: CommandMetaDataArgs) {
     this.target = args.target;
-    this.prefix = args.prefix || DEFAULT_PREFIX;
     this.options = args.options;
+    this.flags = [];
+    this.subCommands = [];
+    this.auth = [];
   }
 }

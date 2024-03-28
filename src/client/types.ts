@@ -1,3 +1,7 @@
+import type { ChatInputCommandInteraction } from 'discord.js';
+
 export type ClientConfig = {
-  token: string
-}
+  token: string;
+};
+
+export type Interaction = ChatInputCommandInteraction;

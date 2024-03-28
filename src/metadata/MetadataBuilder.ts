@@ -1,9 +1,13 @@
-import { getMetadataStorage } from '../';
-import { FlagMetadataArgs } from './args';
+import { SubCommandMetadata, getMetadataStorage } from '../';
+import type {
+  AuthorizedMetadataArgs,
+  FlagMetadataArgs,
+  SubCommandMetaDataArgs,
+} from './args';
 import { CommandMetadata } from './CommandMetadata';
 import { ListenerMetadata } from './ListenerMetadata';
 import { FlagMetadata } from './FlagMetadata';
-import { MetadataStorage } from './MetadataStorage';
+import type { MetadataStorage } from './MetadataStorage';
 import { AuthMetadata } from './AuthMetadata';
 
 export class MetadataBuilder {
@@ -22,18 +26,23 @@ export class MetadataBuilder {
   }
 
   private createCommands(classes?: Function[]): CommandMetadata[] {
-    const commands = classes ? this.metadataStorage.filterMetadataForCommands(classes) : this.metadataStorage.commands;
-    return commands.map(args => {
+    const commands = classes
+      ? this.metadataStorage.filterMetadataForCommands(classes)
+      : this.metadataStorage.commands;
+    return commands.map((args) => {
       const command = new CommandMetadata(args);
       command.flags = this.createFlags(command);
+      command.subCommands = this.createSubCommands(command);
       command.auth = this.createCommandAuth(command);
       return command;
     });
   }
 
   private createListeners(classes?: Function[]): ListenerMetadata[] {
-    const listeners = classes ? this.metadataStorage.filterMetadataForListeners(classes) : this.metadataStorage.listeners;
-    return listeners.map(args => {
+    const listeners = classes
+      ? this.metadataStorage.filterMetadataForListeners(classes)
+      : this.metadataStorage.listeners;
+    return listeners.map((args) => {
       const listener = new ListenerMetadata(args);
       return listener;
     });
@@ -46,28 +55,51 @@ export class MetadataBuilder {
       flagsWithTarget.push(
         ...this.metadataStorage
           .filterFlagsForTarget(target)
-          .filter(flag => flagsWithTarget.map(f => f.method).indexOf(flag.method) === -1)
+          .filter(
+            (flag) =>
+              flagsWithTarget.map((f) => f.method).indexOf(flag.method) === -1,
+          ),
       );
       target = Object.getPrototypeOf(target);
     }
-    return flagsWithTarget.map(args => {
+    return flagsWithTarget.map((args) => {
       const flag = new FlagMetadata(args);
-      flag.auth = this.createFlagAuth(command, flag.name);
       return flag;
     });
   }
 
-  private createCommandAuth(command: CommandMetadata) {
-    const target = command.target;
-    const auth = this.metadataStorage.filterAuthForCommand(target);
-    if (!auth) return;
-    return new AuthMetadata(auth);
+  private createSubCommands(command: CommandMetadata): SubCommandMetadata[] {
+    let target = command.target;
+    const subCommandsWithTarget: SubCommandMetaDataArgs[] = [];
+    while (target) {
+      subCommandsWithTarget.push(
+        ...this.metadataStorage
+          .filterSubcommandsForTarget(target)
+          .filter(
+            (sc) =>
+              subCommandsWithTarget.map((s) => s.method).indexOf(sc.method) ===
+              -1,
+          ),
+      );
+      target = Object.getPrototypeOf(target);
+    }
+    return subCommandsWithTarget.map((args) => new SubCommandMetadata(args));
   }
 
-  private createFlagAuth(command: CommandMetadata, method: string) {
-    const target = command.target;
-    const auth = this.metadataStorage.filterAuthForFlag(target, method);
-    if (!auth) return;
-    return new AuthMetadata(auth);
+  private createCommandAuth(command: CommandMetadata): AuthMetadata[] {
+    let target = command.target;
+    const authWithTarget: AuthorizedMetadataArgs[] = [];
+    while (target) {
+      authWithTarget.push(
+        ...this.metadataStorage
+          .filterAuthForCommand(target)
+          .filter(
+            (auth) =>
+              authWithTarget.map((a) => a.method).indexOf(auth.method) === -1,
+          ),
+      );
+      target = Object.getPrototypeOf(target);
+    }
+    return authWithTarget.map((args) => new AuthMetadata(args));
   }
 }

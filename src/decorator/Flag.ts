@@ -1,12 +1,14 @@
 import { getMetadataStorage } from '../';
-import { FlagMetadataArgs } from '../metadata';
+import type { FlagOptions } from '../metadata';
 
-export function Flag(name?: string, options?: FlagMetadataArgs): Function {
-  return function (object: Function, methodName: string) {
+export function Flag(name: string, options: FlagOptions): Function {
+  return (object: Function, methodName: string, order: number) => {
     getMetadataStorage().flags.push({
       target: object.constructor,
-      method: name || methodName,
-      options
+      method: methodName === 'run' ? 'default' : methodName,
+      name,
+      options,
+      order,
     });
   };
 }

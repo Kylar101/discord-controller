@@ -1,16 +1,19 @@
-import { FlagMetadataArgs } from './args';
-import { AuthMetadata } from './AuthMetadata';
+import type { FlagMetadataArgs, FlagOptions } from './args';
+import type { AuthMetadata } from './AuthMetadata';
 
 export class FlagMetadata {
-
   target: Function;
   name: string;
-  options: any;
-  auth: AuthMetadata;
+  method: string;
+  options: FlagOptions;
+  order: number;
+  auth: AuthMetadata|undefined;
 
   constructor(args: FlagMetadataArgs) {
     this.target = args.target;
-    this.name = args.method;
+    this.name = args.name;
+    this.method = args.method;
     this.options = args.options;
+    this.order = args.order;
   }
 }

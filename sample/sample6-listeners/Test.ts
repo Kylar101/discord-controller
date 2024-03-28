@@ -1,16 +1,15 @@
-import { ClientEvents } from 'discord.js';
-import { Listener, DiscordEvents, Listen } from '../../src/';
+import { ClientEvents, Events } from "discord.js";
+import { Listen, Listener, DiscordEvents } from "discord-controller";
 
-@Listen(DiscordEvents.Message)
-export class Test implements Listener<DiscordEvents.Message> {
-
-  listen(parameters: ClientEvents[DiscordEvents.Message]) {
-    const [ message ] = parameters;
-    return message.content.includes('hello');
+@Listen(Events.MessageCreate)
+export class TestListener implements Listener<DiscordEvents.Message> {
+  async listen(parameters: ClientEvents[Events.MessageCreate]) {
+    const [message] = parameters;
+    return message.content.includes("hello");
   }
 
-  run(parameters: ClientEvents[DiscordEvents.Message]) {
-    const [ message ] = parameters;
-    message.channel.send('someone sent a greeting');
+  run(parameters: ClientEvents[Events.MessageCreate]) {
+    const [message] = parameters;
+    message.channel.send("someone sent a greeting");
   }
 }

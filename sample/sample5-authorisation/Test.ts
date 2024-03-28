@@ -1,15 +1,15 @@
-import { Message } from 'discord.js';
-import { Action } from '../../src/commands';
-import { Command, Authorized } from '../../src/decorator';
+import { Authorized, Action, Command, Interaction } from "discord-controller";
 
-@Authorized('AllowedRole')
-@Command()
+@Authorized("AllowedRole")
+@Command({ description: "This is the description" })
 export class Test extends Action {
   constructor() {
     super();
   }
 
-  async run(message: Message) {
-    message.channel.send('This command can be used by members who have \'AllowedRole\' role');
+  async run(message: Interaction) {
+    message.channel.send(
+      "This command can be used by members who have 'AllowedRole' role",
+    );
   }
 }

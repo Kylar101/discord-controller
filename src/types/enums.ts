@@ -23,7 +23,7 @@ export enum DiscordEvents {
   GuildUpdate = 'guildUpdate',
   inviteCreate = 'inviteCreate',
   InviteDelete = 'inviteDelete',
-  Message = 'message',
+  Message = 'messageCreate',
   MessageDelete = 'messageDelete',
   MessageReactionRemoveAll = 'MessageReactionRemoveAll',
   MessageReactionRemoveEmoji = 'MessageReactionRemoveEmoji',
@@ -44,5 +44,5 @@ export enum DiscordEvents {
   ShardError = 'shardError',
   ShardReady = 'shardReady',
   ShardReconnecting = 'shardReconnecting',
-  ShardResume = 'shardResume'
+  ShardResume = 'shardResume',
 }

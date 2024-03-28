@@ -1,14 +1,20 @@
-import * as path from 'path';
+import * as path from 'node:path';
 
-export function importClassesFromDirectories(directories: string[], formats = ['.js', '.ts']): Function[] {
-
-  const loadFileClasses = function (exported: any, allLoaded: Function[]) {
+export function importClassesFromDirectories(
+  directories: string[],
+  formats = ['.js', '.ts'],
+): Function[] {
+  const loadFileClasses = (exported: any, allLoaded: Function[]) => {
     if (exported instanceof Function) {
       allLoaded.push(exported);
-    } else if (exported instanceof Array) {
+    } else if (Array.isArray(exported)) {
+      // biome-ignore lint/complexity/noForEach: its cleaner to have this a one line
       exported.forEach((i: any) => loadFileClasses(i, allLoaded));
     } else if (exported instanceof Object || typeof exported === 'object') {
-      Object.keys(exported).forEach(key => loadFileClasses(exported[key], allLoaded));
+      // biome-ignore lint/complexity/noForEach: its cleaner for it to be this way
+      Object.keys(exported).forEach((key) =>
+        loadFileClasses(exported[key], allLoaded),
+      );
     }
 
     return allLoaded;
@@ -19,11 +25,13 @@ export function importClassesFromDirectories(directories: string[], formats = ['
   }, [] as string[]);
 
   const dirs = allFiles
-    .filter(file => {
+    .filter((file) => {
       const dtsExtension = file.substring(file.length - 5, file.length);
-      return formats.indexOf(path.extname(file)) !== -1 && dtsExtension !== '.d.ts';
+      return (
+        formats.indexOf(path.extname(file)) !== -1 && dtsExtension !== '.d.ts'
+      );
     })
-    .map(file => {
+    .map((file) => {
       return require(file); // eslint-disable-line
     });
 
