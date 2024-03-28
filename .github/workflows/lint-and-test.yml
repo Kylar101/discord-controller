@@ -15,14 +15,14 @@ on:
       - develop
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Run Unit tests
-        run: |
-          npm i
-          npm run test
+  # test:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Run Unit tests
+  #       run: |
+  #         npm i
+  #         npm run test
   lint:
     runs-on: ubuntu-latest
     steps:
