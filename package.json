@@ -6,9 +6,7 @@
   "scripts": {
     "start": "nodemon --exec ts-node ./src/example/bot.ts",
     "build": "tsc",
-    "pack": "mv ./build/src dist",
-    "package": "npm run build && npm run pack",
-    "clean": "rm -rf build && rm -rf dist",
+    "clean": "rm -rf dist",
     "test": "echo 'No tests created'",
     "lint": "npx @biomejs/biome lint ./src",
     "lint:fix": "npx @biomejs/biome lint --apply ./src",
